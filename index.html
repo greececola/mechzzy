@@ -194,7 +194,8 @@
       document.getElementById("scheduleBox").classList.add("hidden");
 
       if (type === "emergency") {
-        tab1.classList.add("active");
+       document.getElementById("tab1").classList.add("active");
+       document.getElementById("tab2").classList.add("active");
         emergencyBox.classList.remove("hidden");
       } else {
         tab2.classList.add("active");
@@ -203,20 +204,36 @@
     }
 
     function submitRequest() {
-      const id = Date.now();
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const vehicle = document.getElementById("vehicle").value;
+  const problem = document.getElementById("problem").value;
 
-      db.ref("requests/" + id).set({
-        name: name.value,
-        phone: phone.value,
-        vehicle: vehicle.value,
-        problem: problem.value,
-        status: "pending"
-      });
+  if (!name || !phone || !vehicle || !problem) {
+    alert("Please fill all fields");
+    return;
+  }
 
-      localStorage.setItem("myRequest", id);
-      showStatus();
-    }
+  const id = Date.now();
 
+  db.ref("requests/" + id).set({
+    name: name,
+    phone: phone,
+    vehicle: vehicle,
+    problem: problem,
+    status: "pending"
+  })
+  .then(() => {
+    alert("Request sent 🚀");
+  })
+  .catch((error) => {
+    alert("Error: " + error.message);
+    console.log(error);
+  });
+
+  localStorage.setItem("myRequest", id);
+  showStatus();
+}
     function showStatus() {
       const id = localStorage.getItem("myRequest");
       if (!id) return;
