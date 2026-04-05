@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mechzzy Mechanic Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f8fafc;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #7fb3ff, #60a5fa);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #60a5fa;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3b82f6;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">Mechzzy Mechanic</div>
+
+  <div class="container">
+    <div class="card">
+      <h2>Login to your account</h2>
+      <div class="subtitle">Start receiving service requests</div>
+
+      <input type="text" id="name" placeholder="Your Name">
+      <input type="text" id="phone" placeholder="Phone Number">
+
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+
+      if (!name || !phone) {
+        alert("Enter all details");
+        return;
+      }
+
+      // Save locally
+      localStorage.setItem("mechanicName", name);
+      localStorage.setItem("mechanicPhone", phone);
+
+      // Redirect to dashboard
+      window.location.href = "mechanic.html";
+    }
+  </script>
+
+</body>
+</html>
