@@ -6,27 +6,54 @@
 <style>
 body{
 margin:0;
-font-family:Arial;
-background:#3B2A21;
-color:#f5f1ea;
-}
-
-.header{
-padding:20px;
-font-size:22px;
-font-weight:700;
+font-family:'Inter', sans-serif;
+background:#000;
+color:#fff;
 }
 
 .card{
-background:#4a352a;
-margin:15px;
-padding:20px;
+background:#111;
+border:1px solid #222;
 border-radius:14px;
+padding:16px;
+margin:12px;
+}
+
+input{
+width:100%;
+padding:14px;
+background:#111;
+border:1px solid #222;
+color:#fff;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+background:#fff;
+color:#000;
+border:none;
+padding:14px;
+border-radius:10px;
+font-weight:600;
 cursor:pointer;
 }
 
+.secondary{
+background:#111;
+color:#fff;
+border:1px solid #333;
+}
+
+.header{
+padding:18px;
+font-weight:700;
+font-size:20px;
+border-bottom:1px solid #222;
+}
+
 .desc{
-opacity:.7;
+color:#aaa;
 font-size:14px;
 }
 </style>
@@ -34,9 +61,9 @@ font-size:14px;
 
 <body>
 
-<div class="header">Welcome to Mechzzy</div>
+<div class="header">Mechzzy</div>
 
-<div class="card" onclick="location.href='emergency.html'">
+<div class="card" onclick="emergency()">
 🚨 Emergency Help
 <div class="desc">Find nearby mechanic immediately</div>
 </div>

@@ -2,88 +2,53 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MECHZZY</title>
+<title>Mechzzy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body{
 margin:0;
-font-family:Arial;
-background:#3B2A21;
-color:#f5f1ea;
-display:flex;
-justify-content:center;
-align-items:center;
+background:#000;
+color:#fff;
+font-family:'Inter', sans-serif;
+}
+
+.splash{
 height:100vh;
-}
-
-.container{
-text-align:center;
-}
-
-.logoCircle{
-width:90px;
-height:90px;
-background:#2a1d16;
-border-radius:50%;
 display:flex;
-align-items:center;
 justify-content:center;
-margin:auto;
-font-size:42px;
-font-weight:700;
+align-items:center;
+flex-direction:column;
 }
 
-.title{
-margin-top:10px;
-font-size:24px;
+.logo{
+font-size:36px;
 font-weight:700;
+letter-spacing:6px;
 }
 
 .tag{
-opacity:.7;
-margin-bottom:30px;
-}
-
-.btn{
-display:block;
-width:260px;
-padding:16px;
-margin:10px auto;
-border-radius:12px;
-border:none;
-font-size:16px;
-cursor:pointer;
-}
-
-.primary{
-background:#d2b48c;
-color:#3B2A21;
-}
-
-.secondary{
-background:#5a4336;
-color:white;
+color:#aaa;
+margin-top:10px;
+font-size:14px;
 }
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
-
-<div class="logoCircle">M</div>
-<div class="title">MECHZZY</div>
-<div class="tag">Emergency Roadside Assistance</div>
-
-<button class="btn primary" onclick="location.href='customer.html'">
-🚨 Get Help
-</button>
-
-<button class="btn secondary" onclick="location.href='mechanic-login.html'">
-🔧 Join Mechanic
-</button>
-
+<div class="splash">
+<div class="logo">MECHZZY</div>
+<div class="tag">Roadside Assistance</div>
 </div>
+
+<script>
+setTimeout(function(){
+window.location.href="customer.html"
+},1800)
+</script>
 
 </body>
 </html>

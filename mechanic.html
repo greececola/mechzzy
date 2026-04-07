@@ -7,75 +7,66 @@
 <style>
 body{
 margin:0;
-font-family:Arial;
-background:#020617;
-color:white;
-}
-
-.header{
-padding:12px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid #1e293b;
-}
-
-.toggle{
-padding:6px 14px;
-border-radius:20px;
-background:#1e293b;
-cursor:pointer;
-}
-
-.online{
-background:#22c55e;
-}
-
-.container{
-padding:15px;
+font-family:'Inter', sans-serif;
+background:#000;
+color:#fff;
 }
 
 .card{
-background:#0f172a;
-padding:15px;
-border-radius:12px;
-margin-bottom:12px;
-border:1px solid #1e293b;
+background:#111;
+border:1px solid #222;
+border-radius:14px;
+padding:16px;
+margin:12px;
 }
 
-.btn{
-padding:10px;
-border-radius:8px;
+input{
+width:100%;
+padding:14px;
+background:#111;
+border:1px solid #222;
+color:#fff;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+background:#fff;
+color:#000;
 border:none;
-margin-top:8px;
+padding:14px;
+border-radius:10px;
+font-weight:600;
 cursor:pointer;
-width:48%;
+}
+
+.secondary{
+background:#111;
+color:#fff;
+border:1px solid #333;
+}
+
+.header{
+padding:18px;
+font-weight:700;
+font-size:20px;
+border-bottom:1px solid #222;
+}
+
+.desc{
+color:#aaa;
+font-size:14px;
 }
 
 .accept{
-background:#22c55e;
-color:white;
+background:white;
+color:black;
 }
 
 .reject{
-background:#ef4444;
+background:#111;
 color:white;
-float:right;
-}
-
-.timer{
-font-size:12px;
-opacity:.6;
-margin-top:5px;
-}
-
-.radiusBox{
-display:flex;
-gap:5px;
-}
-
-.radiusBox input{
-width:60px;
+border:1px solid #333;
 }
 </style>
 </head>
@@ -288,6 +279,27 @@ function reject(id){}
 
 function playSound(){
 document.getElementById("sound").play()
+}
+
+function send(){
+
+let id = Date.now()
+
+// create 4-digit pin
+let pin = Math.floor(1000 + Math.random() * 9000)
+
+db.ref("requests/"+id).set({
+name:name.value,
+phone:phone.value,
+vehicle:vehicle.value,
+problem:problem.value,
+lat:myLat,
+lng:myLng,
+status:"pending",
+pin: pin
+})
+
+listen(id)
 }
 
 </script>
