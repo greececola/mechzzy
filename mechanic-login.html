@@ -1,109 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mechzzy Mechanic Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechzzy Mechanic Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #f8fafc;
-    }
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#020617;
+color:white;
+}
 
-    .header {
-      background: linear-gradient(135deg, #7fb3ff, #60a5fa);
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
+.header{
+padding:20px;
+text-align:center;
+font-weight:700;
+border-bottom:1px solid #1e293b;
+}
 
-    .container {
-      padding: 20px;
-    }
+.container{
+padding:20px;
+}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:16px;
+border:1px solid #1e293b;
+}
 
-    h2 {
-      margin-bottom: 15px;
-      font-size: 16px;
-    }
+input{
+width:100%;
+padding:14px;
+margin-bottom:10px;
+border-radius:10px;
+border:none;
+background:#020617;
+color:white;
+border:1px solid #1e293b;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      font-size: 14px;
-    }
+button{
+width:100%;
+padding:14px;
+background:#22c55e;
+color:white;
+border:none;
+border-radius:12px;
+font-weight:600;
+cursor:pointer;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      background: #60a5fa;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #3b82f6;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 15px;
-    }
-  </style>
+.subtitle{
+opacity:.6;
+margin-bottom:15px;
+font-size:14px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="header">Mechzzy Mechanic</div>
+<div class="header">
+Mechanic Login
+</div>
 
-  <div class="container">
-    <div class="card">
-      <h2>Login to your account</h2>
-      <div class="subtitle">Start receiving service requests</div>
+<div class="container">
 
-      <input type="text" id="name" placeholder="Your Name">
-      <input type="text" id="phone" placeholder="Phone Number">
+<div class="card">
 
-      <button onclick="login()">Login</button>
-    </div>
-  </div>
+<div class="subtitle">
+Go online and receive nearby requests
+</div>
 
-  <script>
-    function login() {
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
+<input id="name" placeholder="Your Name">
+<input id="phone" placeholder="Phone Number">
 
-      if (!name || !phone) {
-        alert("Enter all details");
-        return;
-      }
+<button onclick="login()">
+Go Online
+</button>
 
-      // Save locally
-      localStorage.setItem("mechanicName", name);
-      localStorage.setItem("mechanicPhone", phone);
+</div>
 
-      // Redirect to dashboard
-      window.location.href = "mechanic.html";
-    }
-  </script>
+</div>
+
+<script>
+
+function login(){
+
+const name=document.getElementById("name").value
+const phone=document.getElementById("phone").value
+
+if(!name || !phone){
+alert("Enter all details")
+return
+}
+
+localStorage.setItem("mechName",name)
+localStorage.setItem("mechPhone",phone)
+
+window.location.href="mechanic.html"
+
+}
+
+</script>
 
 </body>
 </html>

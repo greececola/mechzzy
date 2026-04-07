@@ -1,220 +1,294 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mechzzy Mechanic</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechzzy Mechanic</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f8fafc;
-    }
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#020617;
+color:white;
+}
 
-    .header {
-      background: linear-gradient(135deg, #7fb3ff, #60a5fa);
-      color: white;
-      padding: 18px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 700;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-    }
+.header{
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #1e293b;
+}
 
-    .container {
-      padding: 15px;
-    }
+.toggle{
+padding:6px 14px;
+border-radius:20px;
+background:#1e293b;
+cursor:pointer;
+}
 
-    .card {
-      background: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
+.online{
+background:#22c55e;
+}
 
-    .title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #0f172a;
-    }
+.container{
+padding:15px;
+}
 
-    .sub {
-      font-size: 14px;
-      color: #64748b;
-    }
+.card{
+background:#0f172a;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
+border:1px solid #1e293b;
+}
 
-    .btn {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-    }
+.btn{
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:8px;
+cursor:pointer;
+width:48%;
+}
 
-    .accept {
-      background: #7fb3ff;
-      color: white;
-    }
+.accept{
+background:#22c55e;
+color:white;
+}
 
-    .cancel {
-      background: white;
-      color: #3b82f6;
-      border: 1px solid #bfdbfe;
-      font-weight: 600;
-      padding: 12px 18px;
-      border-radius: 12px;
-    }
+.reject{
+background:#ef4444;
+color:white;
+float:right;
+}
 
-    .cancel:hover {
-      background: #eff6ff;
-    }
+.timer{
+font-size:12px;
+opacity:.6;
+margin-top:5px;
+}
 
-   .activeBox {
-      background: #e0f2fe;
-      padding: 18px;
-      border-radius: 16px;
-      margin-bottom: 15px;
-      border: 1px solid #bfdbfe;
-      box-shadow: 0 6px 20px rgba(59,130,246,0.15);
-      line-height: 1.6;
-      color: #0f172a;
-    }
+.radiusBox{
+display:flex;
+gap:5px;
+}
 
-  </style>
+.radiusBox input{
+width:60px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="header">🔧 Mechzzy Mechanic</div>
+<div class="header">
 
-  <div class="container">
-    <div id="activeBox"></div>
-    <div id="requests"></div>
-  </div>
+<div>Mechanic</div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<div class="radiusBox">
+<input id="radiusInput" value="10">
+<button onclick="saveRadius()">km</button>
+</div>
 
-  <script>
-    var firebaseConfig = {
-      apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
-      authDomain: "mechzzy.firebaseapp.com",
-      databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "mechzzy"
-    };
+<div id="toggle" class="toggle" onclick="toggleOnline()">Offline</div>
 
-    firebase.initializeApp(firebaseConfig);
-    var db = firebase.database();
+</div>
 
-    const container = document.getElementById("requests");
+<div class="container" id="requests"></div>
 
-    db.ref("requests").on("value", (snapshot) => {
+<audio id="sound">
+<source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
 
-      const data = snapshot.val();
-      const activeId = localStorage.getItem("activeRequest");
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-      if (!data) return;
+<script>
 
-      // 🔥 ACTIVE JOB
-      if (activeId && data[activeId]) {
-        const active = data[activeId];
+var firebaseConfig = {
+apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
+authDomain: "mechzzy.firebaseapp.com",
+databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId: "mechzzy"
+};
 
-        if (active.status === "assigned") {
-          document.getElementById("activeBox").innerHTML = `
-            <div class="activeBox">
-              🚗 <b>Heading to ${active.name}</b><br>
-              📞 ${active.phone}<br><br>
-              <button class="btn cancel" onclick="cancelActiveRide()">Cancel Ride</button>
-            </div>
-          `;
-          return;
-        }
-      }
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
 
-      document.getElementById("activeBox").innerHTML = "";
-      container.innerHTML = "";
+let myLat=null
+let myLng=null
 
-      for (let id in data) {
-        const req = data[id];
+navigator.geolocation.getCurrentPosition(function(pos){
+myLat=pos.coords.latitude
+myLng=pos.coords.longitude
+})
 
-        if (req.status === "cancelled") continue;
+let online=false
+let radius=localStorage.getItem("radius") || 10
 
-        if (req.status === "pending") {
-          container.innerHTML += `
-            <div class="card">
-              <div class="title">${req.problem}</div>
-              <div class="sub">${req.vehicle} • ${req.phone}</div>
-              <button class="btn accept" onclick="acceptRequest('${id}')">Accept</button>
-              <button class="btn cancel" onclick="cancelRequest('${id}')">Cancel</button>
-            </div>
-          `;
-        }
-      }
-    });
+let mechanicName=localStorage.getItem("mechName")
+let mechanicPhone=localStorage.getItem("mechPhone")
 
-    function acceptRequest(id) {
+if(!mechanicName){
+mechanicName=prompt("Enter your name")
+mechanicPhone=prompt("Enter your phone")
 
-      if (localStorage.getItem("activeRequest")) {
-        alert("⚠️ You are already handling a request!");
-        return;
-      }
+localStorage.setItem("mechName",mechanicName)
+localStorage.setItem("mechPhone",mechanicPhone)
+}
 
-      const name = localStorage.getItem("mechanicName");
-      const phone = localStorage.getItem("mechanicPhone");
+function saveRadius(){
+radius=document.getElementById("radiusInput").value
+localStorage.setItem("radius",radius)
+}
 
-      const ref = db.ref("requests/" + id);
+function toggleOnline(){
 
-      ref.transaction((currentData) => {
+online=!online
 
-        if (currentData == null) return;
+if(online){
+toggle.innerText="Online"
+toggle.classList.add("online")
+listenRequests()
+}else{
+toggle.innerText="Offline"
+toggle.classList.remove("online")
+requests.innerHTML=""
+}
 
-        if (currentData.status === "pending") {
-          currentData.status = "assigned";
-          currentData.mechanicName = name;
-          currentData.mechanicPhone = phone;
-          return currentData;
-        }
+}
 
-        return;
+function distance(lat1, lon1, lat2, lon2){
 
-      }, (error, committed) => {
+var R=6371
+var dLat=(lat2-lat1)*Math.PI/180
+var dLon=(lon2-lon1)*Math.PI/180
 
-        if (error) {
-          alert("Error occurred");
-        } else if (!committed) {
-          alert("❌ Already taken");
-        } else {
-          localStorage.setItem("activeRequest", id);
-          alert("✅ Job accepted");
-        }
+var a=
+Math.sin(dLat/2)*Math.sin(dLat/2)+
+Math.cos(lat1*Math.PI/180)*
+Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)*
+Math.sin(dLon/2)
 
-      });
-    }
+var c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))
+return R*c
 
-    function cancelRequest(id) {
-      db.ref("requests/" + id).update({
-        status: "pending",
-        mechanicName: null,
-        mechanicPhone: null
-      });
+}
 
-      localStorage.removeItem("activeRequest");
-    }
+function listenRequests(){
 
-    function cancelActiveRide() {
-      const id = localStorage.getItem("activeRequest");
-      if (!id) return;
+db.ref("requests").on("value",snap=>{
 
-      db.ref("requests/" + id).update({
-        status: "cancelled"
-      });
+if(!online) return
 
-      localStorage.removeItem("activeRequest");
-    }
-  </script>
+requests.innerHTML=""
+
+let list=[]
+
+snap.forEach(child=>{
+list.push({
+id:child.key,
+data:child.val()
+})
+})
+
+list.reverse()
+
+list.forEach(item=>{
+
+let id=item.id
+let data=item.data
+
+if(data.status!="pending") return
+if(!data.lat || !data.lng || !myLat || !myLng) return
+
+let d=distance(
+myLat,
+myLng,
+data.lat,
+data.lng
+)
+
+if(d>radius) return
+
+playSound()
+
+let div=document.createElement("div")
+div.className="card"
+
+let timeLeft=15
+
+div.innerHTML=`
+<b>${data.vehicle}</b> - ${data.problem}<br>
+${data.name} - ${data.phone}
+<br>
+Distance: ${d.toFixed(1)} km
+
+<div class="timer" id="timer-${id}">
+Auto expire in 15s
+</div>
+
+<button class="btn accept" onclick="accept('${id}')">
+Accept
+</button>
+
+<button class="btn reject" onclick="reject('${id}')">
+Reject
+</button>
+`
+
+requests.appendChild(div)
+
+let interval=setInterval(()=>{
+
+timeLeft--
+
+let t=document.getElementById("timer-"+id)
+if(t) t.innerText="Auto expire in "+timeLeft+"s"
+
+if(timeLeft<=0){
+clearInterval(interval)
+div.remove()
+}
+
+},1000)
+
+})
+
+})
+
+}
+
+function accept(id){
+
+db.ref("requests/"+id).once("value",snap=>{
+
+let data=snap.val()
+
+if(data.status!="pending"){
+alert("Already taken")
+return
+}
+
+db.ref("requests/"+id).update({
+status:"assigned",
+mechanicName:mechanicName,
+mechanicPhone:mechanicPhone
+})
+
+})
+
+}
+
+function reject(id){}
+
+function playSound(){
+document.getElementById("sound").play()
+}
+
+</script>
 
 </body>
 </html>

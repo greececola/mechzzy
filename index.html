@@ -1,277 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mechzzy</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechzzy</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f8fafc;
-    }
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#0f172a,#020617);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
 
-    .header {
-      background: linear-gradient(135deg, #7fb3ff, #60a5fa);
-      color: white;
-      padding: 18px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: 700;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
+.container{
+text-align:center;
+width:90%;
+max-width:400px;
+}
 
-    .container {
-      padding: 20px;
-    }
+.logo{
+font-size:38px;
+font-weight:700;
+margin-bottom:10px;
+}
 
-    .card {
-      background: white;
-      padding: 18px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
-    }
+.tag{
+opacity:.7;
+margin-bottom:40px;
+}
 
-    .title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
+.btn{
+display:block;
+width:100%;
+padding:18px;
+margin:12px 0;
+border-radius:12px;
+font-size:16px;
+border:none;
+cursor:pointer;
+}
 
-    input, select {
-      width: 100%;
-      padding: 13px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      font-size: 14px;
-    }
+.primary{
+background:#22c55e;
+color:white;
+}
 
-    input:focus, select:focus {
-      border-color: #7fb3ff;
-      outline: none;
-    }
+.secondary{
+background:#1e293b;
+color:white;
+border:1px solid #334155;
+}
 
-    .btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-
-    .primary {
-      background: #7fb3ff;
-      color: white;
-    }
-
-    .outline {
-      background: transparent;
-      color: #3b82f6;
-      border: 1px solid #bfdbfe;
-    }
-
-    .status {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #e0f2fe;
-      border: 1px solid #bfdbfe;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .tabs {
-      display: flex;
-      margin-bottom: 15px;
-      gap: 10px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: 600;
-      cursor: pointer;
-      background: #e2e8f0;
-    }
-
-    .active {
-      background: #7fb3ff;
-      color: white;
-    }
-  </style>
+.footer{
+position:fixed;
+bottom:15px;
+width:100%;
+text-align:center;
+font-size:12px;
+opacity:.5;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="header">Mechzzy</div>
+<div class="container">
 
-  <div class="container">
+<div class="logo">MECHZZY</div>
+<div class="tag">Emergency Roadside Assistance</div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('emergency')" id="tab1">Emergency</div>
-      <div class="tab" onclick="switchTab('schedule')" id="tab2">Schedule</div>
-    </div>
+<button class="btn primary" onclick="getHelp()">
+🚨 Get Emergency Help
+</button>
 
-    <!-- EMERGENCY -->
-    <div class="card" id="emergencyBox">
+<button class="btn secondary" onclick="joinMechanic()">
+🔧 Join as Mechanic
+</button>
 
-      <div class="title">Get instant help</div>
+</div>
 
-      <input id="name" placeholder="Your Name">
-      <input id="phone" placeholder="Phone Number">
+<div class="footer">
+Fast • Nearby • Reliable
+</div>
 
-      <select id="vehicle">
-        <option value="">Vehicle</option>
-        <option>Bike</option>
-        <option>Car</option>
-      </select>
-
-      <input id="problem" placeholder="Problem">
-
-      <button class="btn primary" onclick="submitRequest()">Request Now</button>
-
-      <button class="btn outline hidden" id="cancelBtn" onclick="cancelRequest()">Cancel</button>
-
-      <div id="statusBox" class="status hidden"></div>
-
-    </div>
-
-    <!-- SCHEDULE -->
-    <div class="card hidden" id="scheduleBox">
-
-      <div class="title">Schedule your service</div>
-
-      <input placeholder="Your Name">
-      <input placeholder="Phone Number">
-
-      <select>
-        <option>Vehicle</option>
-        <option>Bike</option>
-        <option>Car</option>
-      </select>
-
-      <input placeholder="Service type">
-
-      <input type="date">
-      <input type="time">
-
-      <button class="btn primary">Schedule Service</button>
-
-    </div>
-
-  </div>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-  <script>
-    var firebaseConfig = {
-      apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
-      authDomain: "mechzzy.firebaseapp.com",
-      databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "mechzzy"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    var db = firebase.database();
-
-    function switchTab(type) {
-      document.getElementById("tab1").classList.remove("active");
-      document.getElementById("tab2").classList.remove("active");
-
-      document.getElementById("emergencyBox").classList.add("hidden");
-      document.getElementById("scheduleBox").classList.add("hidden");
-
-      if (type === "emergency") {
-       document.getElementById("tab1").classList.add("active");
-       document.getElementById("tab2").classList.add("active");
-        emergencyBox.classList.remove("hidden");
-      } else {
-        tab2.classList.add("active");
-        scheduleBox.classList.remove("hidden");
-      }
-    }
-
-    function submitRequest() {
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
-  const vehicle = document.getElementById("vehicle").value;
-  const problem = document.getElementById("problem").value;
-
-  if (!name || !phone || !vehicle || !problem) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  const id = Date.now();
-
-  db.ref("requests/" + id).set({
-    name: name,
-    phone: phone,
-    vehicle: vehicle,
-    problem: problem,
-    status: "pending"
-  })
-  .then(() => {
-    alert("Request sent 🚀");
-  })
-  .catch((error) => {
-    alert("Error: " + error.message);
-    console.log(error);
-  });
-
-  localStorage.setItem("myRequest", id);
-  showStatus();
+<script>
+function getHelp(){
+window.location.href="customer.html"
 }
-    function showStatus() {
-      const id = localStorage.getItem("myRequest");
-      if (!id) return;
 
-      db.ref("requests/" + id).on("value", snap => {
-        const data = snap.val();
-        if (!data) return;
-
-        statusBox.classList.remove("hidden");
-        cancelBtn.classList.remove("hidden");
-
-        if (data.status === "pending") {
-          statusBox.innerHTML = "Searching for mechanic...";
-        }
-
-        if (data.status === "assigned") {
-          statusBox.innerHTML = `
-            ${data.mechanicName} is on the way<br>
-            ${data.mechanicPhone}
-          `;
-        }
-
-        if (data.status === "cancelled") {
-          statusBox.innerHTML = "Request cancelled";
-        }
-      });
-    }
-
-    function cancelRequest() {
-      const id = localStorage.getItem("myRequest");
-      if (!id) return;
-
-      db.ref("requests/" + id).update({ status: "cancelled" });
-      localStorage.removeItem("myRequest");
-    }
-
-    showStatus();
-  </script>
+function joinMechanic(){
+window.location.href="mechanic-login.html"
+}
+</script>
 
 </body>
 </html>

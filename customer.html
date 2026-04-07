@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechzzy - Customer</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#020617;
+color:white;
+}
+
+.header{
+padding:20px;
+font-size:22px;
+font-weight:600;
+}
+
+.container{
+padding:15px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:14px;
+margin-bottom:15px;
+cursor:pointer;
+border:1px solid #1e293b;
+}
+
+.card:hover{
+background:#111827;
+}
+
+.title{
+font-size:18px;
+margin-bottom:5px;
+}
+
+.desc{
+opacity:.6;
+font-size:14px;
+}
+
+.emergency{
+border-left:4px solid #ef4444;
+}
+
+.schedule{
+border-left:4px solid #22c55e;
+}
+
+.history{
+border-left:4px solid #3b82f6;
+}
+
+.back{
+position:fixed;
+top:15px;
+right:15px;
+background:#0f172a;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="back" onclick="goHome()">Home</div>
+
+<div class="header">
+Welcome to Mechzzy
+</div>
+
+<div class="container">
+
+<div class="card emergency" onclick="emergency()">
+<div class="title">🚨 Emergency Help</div>
+<div class="desc">Find nearby mechanic immediately</div>
+</div>
+
+<div class="card schedule" onclick="schedule()">
+<div class="title">📅 Schedule Service</div>
+<div class="desc">Book mechanic for later</div>
+</div>
+
+<div class="card history" onclick="history()">
+<div class="title">📜 Request History</div>
+<div class="desc">View past service requests</div>
+</div>
+
+</div>
+
+<script>
+
+function goHome(){
+window.location.href="index.html"
+}
+
+function emergency(){
+window.location.href="emergency.html"
+}
+
+function schedule(){
+alert("Coming soon")
+}
+
+function history(){
+alert("Coming soon")
+}
+
+</script>
+
+</body>
+</html>
