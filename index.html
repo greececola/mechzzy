@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mechzzy</title>
+<title>MECHZZY</title>
 
 <style>
 body{
 margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,#0f172a,#020617);
-color:white;
+font-family:Arial;
+background:#3B2A21;
+color:#f5f1ea;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -18,50 +18,51 @@ height:100vh;
 
 .container{
 text-align:center;
-width:90%;
-max-width:400px;
 }
 
-.logo{
-font-size:38px;
+.logoCircle{
+width:90px;
+height:90px;
+background:#2a1d16;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:auto;
+font-size:42px;
 font-weight:700;
-margin-bottom:10px;
+}
+
+.title{
+margin-top:10px;
+font-size:24px;
+font-weight:700;
 }
 
 .tag{
 opacity:.7;
-margin-bottom:40px;
+margin-bottom:30px;
 }
 
 .btn{
 display:block;
-width:100%;
-padding:18px;
-margin:12px 0;
+width:260px;
+padding:16px;
+margin:10px auto;
 border-radius:12px;
-font-size:16px;
 border:none;
+font-size:16px;
 cursor:pointer;
 }
 
 .primary{
-background:#22c55e;
-color:white;
+background:#d2b48c;
+color:#3B2A21;
 }
 
 .secondary{
-background:#1e293b;
+background:#5a4336;
 color:white;
-border:1px solid #334155;
-}
-
-.footer{
-position:fixed;
-bottom:15px;
-width:100%;
-text-align:center;
-font-size:12px;
-opacity:.5;
 }
 </style>
 </head>
@@ -70,32 +71,19 @@ opacity:.5;
 
 <div class="container">
 
-<div class="logo">MECHZZY</div>
+<div class="logoCircle">M</div>
+<div class="title">MECHZZY</div>
 <div class="tag">Emergency Roadside Assistance</div>
 
-<button class="btn primary" onclick="getHelp()">
-🚨 Get Emergency Help
+<button class="btn primary" onclick="location.href='customer.html'">
+🚨 Get Help
 </button>
 
-<button class="btn secondary" onclick="joinMechanic()">
-🔧 Join as Mechanic
+<button class="btn secondary" onclick="location.href='mechanic-login.html'">
+🔧 Join Mechanic
 </button>
 
 </div>
-
-<div class="footer">
-Fast • Nearby • Reliable
-</div>
-
-<script>
-function getHelp(){
-window.location.href="customer.html"
-}
-
-function joinMechanic(){
-window.location.href="mechanic-login.html"
-}
-</script>
 
 </body>
 </html>

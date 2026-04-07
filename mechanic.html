@@ -275,7 +275,9 @@ return
 db.ref("requests/"+id).update({
 status:"assigned",
 mechanicName:mechanicName,
-mechanicPhone:mechanicPhone
+mechanicPhone:mechanicPhone,
+mechLat:myLat,
+mechLng:myLng
 })
 
 })
