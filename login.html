@@ -32,12 +32,6 @@ background:white;
 color:black;
 border:none;
 border-radius:10px;
-font-weight:600;
-}
-
-.title{
-font-size:22px;
-margin-bottom:20px;
 }
 </style>
 </head>
@@ -46,9 +40,10 @@ margin-bottom:20px;
 
 <div class="container">
 
-<div class="title">Login</div>
+<h2>Login</h2>
 
 <input id="phone" placeholder="Phone number">
+
 <button onclick="sendOTP()">Send OTP</button>
 
 <div id="otpBox" style="display:none">
@@ -60,20 +55,13 @@ margin-bottom:20px;
 
 <script>
 
-let generatedOTP
+let generated
 
 function sendOTP(){
 
-let phone = document.getElementById("phone").value
+generated = Math.floor(1000 + Math.random()*9000)
 
-if(!phone){
-alert("Enter phone number")
-return
-}
-
-generatedOTP = Math.floor(1000 + Math.random()*9000)
-
-alert("Your OTP is " + generatedOTP)
+alert("OTP: "+generated)
 
 otpBox.style.display="block"
 
@@ -81,13 +69,18 @@ otpBox.style.display="block"
 
 function verify(){
 
-let entered = document.getElementById("otp").value
+let entered = otp.value
+let role = localStorage.getItem("role")
 
-if(entered == generatedOTP){
+if(entered == generated){
 
 localStorage.setItem("user",phone.value)
 
-window.location.href="customer.html"
+if(role=="customer"){
+location.href="customer.html"
+}else{
+location.href="mechanic.html"
+}
 
 }else{
 alert("Wrong OTP")

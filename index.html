@@ -3,14 +3,12 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
 body{
 margin:0;
-background:black;
-color:white;
-font-family:'Inter', sans-serif;
+background:#000;
+color:#fff;
+font-family:Arial;
 }
 
 .center{
@@ -23,13 +21,30 @@ flex-direction:column;
 
 .logo{
 font-size:36px;
-letter-spacing:6px;
+letter-spacing:5px;
 font-weight:700;
 }
 
 .tag{
 color:#aaa;
 margin-top:10px;
+}
+
+.buttons{
+position:absolute;
+bottom:40px;
+width:100%;
+padding:20px;
+}
+
+button{
+width:100%;
+padding:16px;
+margin-bottom:10px;
+background:#111;
+border:1px solid #222;
+color:white;
+border-radius:12px;
 }
 </style>
 </head>
@@ -41,20 +56,16 @@ margin-top:10px;
 <div class="tag">Roadside Assistance</div>
 </div>
 
+<div class="buttons">
+<button onclick="login('customer')">Login as Customer</button>
+<button onclick="login('mechanic')">Login as Mechanic</button>
+</div>
+
 <script>
-
-setTimeout(()=>{
-
-let user = localStorage.getItem("user")
-
-if(user){
-window.location.href="customer.html"
-}else{
+function login(role){
+localStorage.setItem("role",role)
 window.location.href="login.html"
 }
-
-},1500)
-
 </script>
 
 </body>
