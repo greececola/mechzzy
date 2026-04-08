@@ -209,7 +209,7 @@ playSound()
 let div=document.createElement("div")
 div.className="card"
 
-let timeLeft=15
+let timeLeft=60
 
 div.innerHTML=`
 <b>${data.vehicle}</b> - ${data.problem}<br>
@@ -237,19 +237,6 @@ Reject
 
 requests.appendChild(div)
 
-let interval=setInterval(()=>{
-
-timeLeft--
-
-let t=document.getElementById("timer-"+id)
-if(t) t.innerText="Auto expire in "+timeLeft+"s"
-
-if(timeLeft<=0){
-clearInterval(interval)
-div.remove()
-}
-
-},1000)
 
 })
 
@@ -263,11 +250,6 @@ db.ref("requests/"+id).once("value",snap=>{
 
 let data=snap.val()
 
-if(data.status!="pending"){
-alert("Already taken")
-return
-}
-
 db.ref("requests/"+id).update({
 status:"assigned",
 mechanicName:mechanicName,
@@ -275,6 +257,28 @@ mechanicPhone:mechanicPhone,
 mechLat:myLat,
 mechLng:myLng
 })
+
+requests.innerHTML=`
+
+<div class="card">
+<h3>Heading to customer</h3>
+
+${data.name}<br>
+${data.phone}<br>
+${data.vehicle}<br>
+${data.problem}
+
+<br><br>
+
+<input id="pin-${id}" placeholder="Enter customer PIN">
+
+<button onclick="verify('${id}')">
+Complete Job
+</button>
+
+</div>
+
+`
 
 })
 

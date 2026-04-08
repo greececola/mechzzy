@@ -94,6 +94,41 @@ pin:pin
 document.getElementById("status").innerHTML =
 "Searching mechanic...<br>Your PIN: <b>"+pin+"</b>"
 
+listen(id)
+
+}
+
+function listen(id){
+
+db.ref("requests/"+id).on("value",snap=>{
+
+let data=snap.val()
+
+if(data.status=="pending"){
+status.innerHTML="Searching mechanic..."
+}
+
+if(data.status=="assigned"){
+
+let d = distance(
+myLat,
+myLng,
+data.mechLat,
+data.mechLng
+)
+
+let eta = Math.round((d/30)*60)
+
+status.innerHTML=
+"Mechanic assigned<br>"+
+data.mechanicName+"<br>"+
+"Arriving in "+eta+" mins<br>"+
+"Share PIN: "+data.pin
+
+}
+
+})
+
 }
 
 </script>
