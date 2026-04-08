@@ -3,18 +3,13 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
 body{
 margin:0;
-background:#000;
+background:black;
 color:white;
-font-family:Inter;
-}
-
-.container{
-padding:16px;
+font-family:Arial;
+padding:15px;
 }
 
 input{
@@ -28,26 +23,24 @@ border-radius:10px;
 }
 
 button{
+padding:12px 20px;
 background:white;
 color:black;
-padding:14px;
 border:none;
 border-radius:10px;
-font-weight:600;
+cursor:pointer;
 }
 
 .status{
 margin-top:20px;
 background:#111;
 padding:15px;
-border-radius:12px;
+border-radius:10px;
 }
 </style>
 </head>
 
 <body>
-
-<div class="container">
 
 <input id="name" placeholder="Name">
 <input id="phone" placeholder="Phone">
@@ -58,15 +51,13 @@ border-radius:12px;
 
 <div id="status" class="status"></div>
 
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
 
 var firebaseConfig = {
-apiKey: "AIzaSy...",
+apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
 authDomain: "mechzzy.firebaseapp.com",
 databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
 projectId: "mechzzy"
@@ -75,11 +66,12 @@ projectId: "mechzzy"
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
-let myLat,myLng
+let myLat = null
+let myLng = null
 
-navigator.geolocation.getCurrentPosition(pos=>{
-myLat=pos.coords.latitude
-myLng=pos.coords.longitude
+navigator.geolocation.getCurrentPosition(function(pos){
+myLat = pos.coords.latitude
+myLng = pos.coords.longitude
 })
 
 function sendRequest(){
@@ -89,17 +81,18 @@ let id = Date.now()
 let pin = Math.floor(1000 + Math.random()*9000)
 
 db.ref("requests/"+id).set({
-name:name.value,
-phone:phone.value,
-vehicle:vehicle.value,
-problem:problem.value,
+name:document.getElementById("name").value,
+phone:document.getElementById("phone").value,
+vehicle:document.getElementById("vehicle").value,
+problem:document.getElementById("problem").value,
 lat:myLat,
 lng:myLng,
 status:"pending",
 pin:pin
 })
 
-status.innerHTML="Searching mechanic... PIN: "+pin
+document.getElementById("status").innerHTML =
+"Searching mechanic...<br>Your PIN: <b>"+pin+"</b>"
 
 }
 
