@@ -3,14 +3,12 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
 body{
 margin:0;
-background:#000;
+background:black;
 color:white;
-font-family:Inter;
+font-family:Arial;
 }
 
 .container{
@@ -20,11 +18,11 @@ padding:20px;
 input{
 width:100%;
 padding:14px;
+margin-bottom:10px;
 background:#111;
 border:1px solid #222;
 color:white;
 border-radius:10px;
-margin-bottom:10px;
 }
 
 button{
@@ -50,63 +48,50 @@ margin-bottom:20px;
 
 <div class="title">Login</div>
 
-<input id="phone" placeholder="+91XXXXXXXXXX">
+<input id="phone" placeholder="Phone number">
 <button onclick="sendOTP()">Send OTP</button>
 
 <div id="otpBox" style="display:none">
-
 <input id="otp" placeholder="Enter OTP">
-<button onclick="verifyOTP()">Verify</button>
-
+<button onclick="verify()">Verify</button>
 </div>
 
-<div id="recaptcha"></div>
-
 </div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script>
 
-var firebaseConfig = {
-apiKey: "AIzaSy...",
-authDomain: "mechzzy.firebaseapp.com",
-projectId: "mechzzy"
-};
-
-firebase.initializeApp(firebaseConfig)
-
-window.recaptchaVerifier =
-new firebase.auth.RecaptchaVerifier('recaptcha')
+let generatedOTP
 
 function sendOTP(){
 
-let phone=document.getElementById("phone").value
+let phone = document.getElementById("phone").value
 
-firebase.auth().signInWithPhoneNumber(
-phone,
-window.recaptchaVerifier
-).then(function(confirm){
+if(!phone){
+alert("Enter phone number")
+return
+}
 
-window.confirmationResult=confirm
+generatedOTP = Math.floor(1000 + Math.random()*9000)
+
+alert("Your OTP is " + generatedOTP)
+
 otpBox.style.display="block"
-
-})
 
 }
 
-function verifyOTP(){
+function verify(){
 
-let code=document.getElementById("otp").value
+let entered = document.getElementById("otp").value
 
-confirmationResult.confirm(code).then(function(result){
+if(entered == generatedOTP){
 
-localStorage.setItem("user",result.user.phoneNumber)
+localStorage.setItem("user",phone.value)
 
 window.location.href="customer.html"
 
-})
+}else{
+alert("Wrong OTP")
+}
 
 }
 
