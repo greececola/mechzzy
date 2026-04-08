@@ -2,95 +2,68 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mechzzy Mechanic</title>
 
 <style>
 body{
 margin:0;
-font-family:'Inter', sans-serif;
 background:#000;
 color:#fff;
+font-family:Arial;
+}
+
+.header{
+padding:16px;
+font-size:22px;
+border-bottom:1px solid #222;
+}
+
+.container{
+padding:15px;
 }
 
 .card{
 background:#111;
 border:1px solid #222;
 border-radius:14px;
-padding:16px;
-margin:12px;
-}
-
-input{
-width:100%;
-padding:14px;
-background:#111;
-border:1px solid #222;
-color:#fff;
-border-radius:10px;
-margin-bottom:10px;
+padding:15px;
+margin-bottom:12px;
 }
 
 button{
-background:#fff;
-color:#000;
-border:none;
-padding:14px;
+padding:12px;
 border-radius:10px;
-font-weight:600;
-cursor:pointer;
-}
-
-.secondary{
-background:#111;
-color:#fff;
-border:1px solid #333;
-}
-
-.header{
-padding:18px;
-font-weight:700;
-font-size:20px;
-border-bottom:1px solid #222;
-}
-
-.desc{
-color:#aaa;
-font-size:14px;
+border:none;
+margin-top:8px;
 }
 
 .accept{
-background:white;
-color:black;
+background:#fff;
+color:#000;
 }
 
 .reject{
 background:#111;
-color:white;
+color:#fff;
 border:1px solid #333;
+}
+
+input{
+width:100%;
+padding:12px;
+background:#000;
+border:1px solid #333;
+color:white;
+border-radius:8px;
+margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-
-<div>Mechanic</div>
-
-<div class="radiusBox">
-<input id="radiusInput" value="10">
-<button onclick="saveRadius()">km</button>
-</div>
-
-<div id="toggle" class="toggle" onclick="toggleOnline()">Offline</div>
-
-</div>
+<div class="header">Mechanic</div>
 
 <div class="container" id="requests"></div>
-
-<audio id="sound">
-<source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
-</audio>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -107,136 +80,50 @@ projectId: "mechzzy"
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
-let myLat=null
-let myLng=null
+let myLat,myLng
 
-navigator.geolocation.getCurrentPosition(function(pos){
+navigator.geolocation.getCurrentPosition(pos=>{
 myLat=pos.coords.latitude
 myLng=pos.coords.longitude
 })
 
-let online=false
-let radius=localStorage.getItem("radius") || 10
+let mechanicName = localStorage.getItem("mechanicName") || "Mechanic"
+let mechanicPhone = localStorage.getItem("mechanicPhone") || ""
 
-let mechanicName=localStorage.getItem("mechName")
-let mechanicPhone=localStorage.getItem("mechPhone")
+listen()
 
-if(!mechanicName){
-mechanicName=prompt("Enter your name")
-mechanicPhone=prompt("Enter your phone")
-
-localStorage.setItem("mechName",mechanicName)
-localStorage.setItem("mechPhone",mechanicPhone)
-}
-
-function saveRadius(){
-radius=document.getElementById("radiusInput").value
-localStorage.setItem("radius",radius)
-}
-
-function toggleOnline(){
-
-online=!online
-
-if(online){
-toggle.innerText="Online"
-toggle.classList.add("online")
-listenRequests()
-}else{
-toggle.innerText="Offline"
-toggle.classList.remove("online")
-requests.innerHTML=""
-}
-
-}
-
-function distance(lat1, lon1, lat2, lon2){
-
-var R=6371
-var dLat=(lat2-lat1)*Math.PI/180
-var dLon=(lon2-lon1)*Math.PI/180
-
-var a=
-Math.sin(dLat/2)*Math.sin(dLat/2)+
-Math.cos(lat1*Math.PI/180)*
-Math.cos(lat2*Math.PI/180)*
-Math.sin(dLon/2)*
-Math.sin(dLon/2)
-
-var c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))
-return R*c
-
-}
-
-function listenRequests(){
+function listen(){
 
 db.ref("requests").on("value",snap=>{
 
-if(!online) return
-
 requests.innerHTML=""
 
-let list=[]
-
 snap.forEach(child=>{
-list.push({
-id:child.key,
-data:child.val()
-})
-})
 
-list.reverse()
-
-list.forEach(item=>{
-
-let id=item.id
-let data=item.data
+let id=child.key
+let data=child.val()
 
 if(data.status!="pending") return
-if(!data.lat || !data.lng || !myLat || !myLng) return
-
-let d=distance(
-myLat,
-myLng,
-data.lat,
-data.lng
-)
-
-if(d>radius) return
-
-playSound()
 
 let div=document.createElement("div")
 div.className="card"
 
-let timeLeft=60
-
 div.innerHTML=`
 <b>${data.vehicle}</b> - ${data.problem}<br>
 ${data.name} - ${data.phone}
-<br>
-Distance: ${d.toFixed(1)} km
 
-<div style="margin-top:10px">
-<input id="pin-${id}" placeholder="Enter customer PIN" style="width:100%;padding:10px;background:#000;border:1px solid #333;color:white;border-radius:8px">
-<button onclick="verify('${id}')" style="margin-top:6px;width:100%">Confirm Arrival</button>
-</div>
+<br><br>
 
-<div class="timer" id="timer-${id}">
-Auto expire in 15s
-</div>
-
-<button class="btn accept" onclick="accept('${id}')">
+<button class="accept" onclick="accept('${id}')">
 Accept
 </button>
 
-<button class="btn reject" onclick="reject('${id}')">
+<button class="reject" onclick="reject('${id}')">
 Reject
 </button>
 `
 
 requests.appendChild(div)
-
 
 })
 
@@ -261,6 +148,7 @@ mechLng:myLng
 requests.innerHTML=`
 
 <div class="card">
+
 <h3>Heading to customer</h3>
 
 ${data.name}<br>
@@ -268,11 +156,9 @@ ${data.phone}<br>
 ${data.vehicle}<br>
 ${data.problem}
 
-<br><br>
-
 <input id="pin-${id}" placeholder="Enter customer PIN">
 
-<button onclick="verify('${id}')">
+<button class="accept" onclick="verify('${id}')">
 Complete Job
 </button>
 
@@ -284,23 +170,23 @@ Complete Job
 
 }
 
-function reject(id){}
-
 function verify(id){
 
-let entered = document.getElementById("pin-"+id).value
+let entered=document.getElementById("pin-"+id).value
 
 db.ref("requests/"+id).once("value",snap=>{
 
-let data = snap.val()
+let data=snap.val()
 
-if(entered == data.pin){
+if(entered==data.pin){
 
 db.ref("requests/"+id).update({
 status:"completed"
 })
 
 alert("Job completed")
+
+requests.innerHTML=""
 
 }else{
 alert("Wrong PIN")
@@ -310,29 +196,8 @@ alert("Wrong PIN")
 
 }
 
-function playSound(){
-document.getElementById("sound").play()
-}
-
-function send(){
-
-let id = Date.now()
-
-// create 4-digit pin
-let pin = Math.floor(1000 + Math.random() * 9000)
-
-db.ref("requests/"+id).set({
-name:name.value,
-phone:phone.value,
-vehicle:vehicle.value,
-problem:problem.value,
-lat:myLat,
-lng:myLng,
-status:"pending",
-pin: pin
-})
-
-listen(id)
+function reject(id){
+db.ref("requests/"+id).remove()
 }
 
 </script>
