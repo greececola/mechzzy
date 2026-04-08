@@ -2,19 +2,18 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mechzzy</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body{
 margin:0;
-background:#000;
-color:#fff;
+background:black;
+color:white;
 font-family:'Inter', sans-serif;
 }
 
-.splash{
+.center{
 height:100vh;
 display:flex;
 justify-content:center;
@@ -23,66 +22,38 @@ flex-direction:column;
 }
 
 .logo{
-font-size:34px;
-font-weight:700;
+font-size:36px;
 letter-spacing:6px;
+font-weight:700;
 }
 
 .tag{
 color:#aaa;
 margin-top:10px;
 }
-
-.buttons{
-position:absolute;
-bottom:40px;
-width:100%;
-padding:20px;
-box-sizing:border-box;
-}
-
-.btn{
-width:100%;
-padding:16px;
-margin-bottom:10px;
-border-radius:12px;
-border:1px solid #222;
-background:#111;
-color:white;
-font-size:16px;
-}
 </style>
-
 </head>
 
 <body>
 
-<div class="splash">
+<div class="center">
 <div class="logo">MECHZZY</div>
 <div class="tag">Roadside Assistance</div>
 </div>
 
-<div class="buttons">
-
-<button class="btn" onclick="customer()">
-🚨 Continue as Customer
-</button>
-
-<button class="btn" onclick="mechanic()">
-🔧 Login as Mechanic
-</button>
-
-</div>
-
 <script>
 
-function customer(){
+setTimeout(()=>{
+
+let user = localStorage.getItem("user")
+
+if(user){
 window.location.href="customer.html"
+}else{
+window.location.href="login.html"
 }
 
-function mechanic(){
-window.location.href="mechanic-login.html"
-}
+},1500)
 
 </script>
 

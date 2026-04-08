@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:white;
+font-family:Inter;
+}
+
+.container{
+padding:20px;
+}
+
+input{
+width:100%;
+padding:14px;
+background:#111;
+border:1px solid #222;
+color:white;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+width:100%;
+padding:14px;
+background:white;
+color:black;
+border:none;
+border-radius:10px;
+font-weight:600;
+}
+
+.title{
+font-size:22px;
+margin-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Login</div>
+
+<input id="phone" placeholder="+91XXXXXXXXXX">
+<button onclick="sendOTP()">Send OTP</button>
+
+<div id="otpBox" style="display:none">
+
+<input id="otp" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify</button>
+
+</div>
+
+<div id="recaptcha"></div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+
+var firebaseConfig = {
+apiKey: "AIzaSy...",
+authDomain: "mechzzy.firebaseapp.com",
+projectId: "mechzzy"
+};
+
+firebase.initializeApp(firebaseConfig)
+
+window.recaptchaVerifier =
+new firebase.auth.RecaptchaVerifier('recaptcha')
+
+function sendOTP(){
+
+let phone=document.getElementById("phone").value
+
+firebase.auth().signInWithPhoneNumber(
+phone,
+window.recaptchaVerifier
+).then(function(confirm){
+
+window.confirmationResult=confirm
+otpBox.style.display="block"
+
+})
+
+}
+
+function verifyOTP(){
+
+let code=document.getElementById("otp").value
+
+confirmationResult.confirm(code).then(function(result){
+
+localStorage.setItem("user",result.user.phoneNumber)
+
+window.location.href="customer.html"
+
+})
+
+}
+
+</script>
+
+</body>
+</html>

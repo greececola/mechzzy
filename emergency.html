@@ -3,58 +3,44 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
 body{
 margin:0;
-font-family:'Inter', sans-serif;
 background:#000;
-color:#fff;
+color:white;
+font-family:Inter;
 }
 
-.card{
-background:#111;
-border:1px solid #222;
-border-radius:14px;
+.container{
 padding:16px;
-margin:12px;
 }
 
 input{
 width:100%;
 padding:14px;
+margin-bottom:10px;
 background:#111;
 border:1px solid #222;
-color:#fff;
+color:white;
 border-radius:10px;
-margin-bottom:10px;
 }
 
 button{
-background:#fff;
-color:#000;
-border:none;
+background:white;
+color:black;
 padding:14px;
+border:none;
 border-radius:10px;
 font-weight:600;
-cursor:pointer;
 }
 
-.secondary{
+.status{
+margin-top:20px;
 background:#111;
-color:#fff;
-border:1px solid #333;
-}
-
-.header{
-padding:18px;
-font-weight:700;
-font-size:20px;
-border-bottom:1px solid #222;
-}
-
-.desc{
-color:#aaa;
-font-size:14px;
+padding:15px;
+border-radius:12px;
 }
 </style>
 </head>
@@ -68,7 +54,7 @@ font-size:14px;
 <input id="vehicle" placeholder="Vehicle">
 <input id="problem" placeholder="Problem">
 
-<button onclick="send()">Request Mechanic</button>
+<button onclick="sendRequest()">Request Mechanic</button>
 
 <div id="status" class="status"></div>
 
@@ -79,15 +65,15 @@ font-size:14px;
 
 <script>
 
-var firebaseConfig={
-apiKey:"AIzaSy...",
-authDomain:"mechzzy.firebaseapp.com",
-databaseURL:"https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId:"mechzzy"
-}
+var firebaseConfig = {
+apiKey: "AIzaSy...",
+authDomain: "mechzzy.firebaseapp.com",
+databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId: "mechzzy"
+};
 
-firebase.initializeApp(firebaseConfig)
-var db=firebase.database()
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
 
 let myLat,myLng
 
@@ -96,12 +82,11 @@ myLat=pos.coords.latitude
 myLng=pos.coords.longitude
 })
 
-function send(){
+function sendRequest(){
 
 let id = Date.now()
 
-// create 4-digit pin
-let pin = Math.floor(1000 + Math.random() * 9000)
+let pin = Math.floor(1000 + Math.random()*9000)
 
 db.ref("requests/"+id).set({
 name:name.value,
@@ -111,60 +96,10 @@ problem:problem.value,
 lat:myLat,
 lng:myLng,
 status:"pending",
-pin: pin
+pin:pin
 })
 
-listen(id)
-}
-
-function listen(id){
-
-db.ref("requests/"+id).on("value",snap=>{
-
-let data=snap.val()
-
-if(data.status=="pending"){
-status.innerHTML="Searching nearby mechanic..."
-}
-
-if(data.status=="assigned"){
-
-let d = distance(
-myLat,
-myLng,
-data.mechLat,
-data.mechLng
-)
-
-let eta = Math.round((d/30)*60)
-
-status.innerHTML =
-"Mechanic assigned<br>" +
-data.mechanicName + "<br><br>" +
-"Share PIN: <b>" + data.pin + "</b><br>" +
-"Arriving in " + eta + " mins"
-
-}
-
-})
-
-}
-
-function distance(lat1, lon1, lat2, lon2){
-
-var R=6371
-var dLat=(lat2-lat1)*Math.PI/180
-var dLon=(lon2-lon1)*Math.PI/180
-
-var a=
-Math.sin(dLat/2)*Math.sin(dLat/2)+
-Math.cos(lat1*Math.PI/180)*
-Math.cos(lat2*Math.PI/180)*
-Math.sin(dLon/2)*
-Math.sin(dLon/2)
-
-var c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))
-return R*c
+status.innerHTML="Searching mechanic... PIN: "+pin
 
 }
 
