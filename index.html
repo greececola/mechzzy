@@ -23,7 +23,7 @@ flex-direction:column;
 }
 
 .logo{
-font-size:36px;
+font-size:34px;
 font-weight:700;
 letter-spacing:6px;
 }
@@ -31,7 +31,25 @@ letter-spacing:6px;
 .tag{
 color:#aaa;
 margin-top:10px;
-font-size:14px;
+}
+
+.buttons{
+position:absolute;
+bottom:40px;
+width:100%;
+padding:20px;
+box-sizing:border-box;
+}
+
+.btn{
+width:100%;
+padding:16px;
+margin-bottom:10px;
+border-radius:12px;
+border:1px solid #222;
+background:#111;
+color:white;
+font-size:16px;
 }
 </style>
 
@@ -44,10 +62,28 @@ font-size:14px;
 <div class="tag">Roadside Assistance</div>
 </div>
 
+<div class="buttons">
+
+<button class="btn" onclick="customer()">
+🚨 Continue as Customer
+</button>
+
+<button class="btn" onclick="mechanic()">
+🔧 Login as Mechanic
+</button>
+
+</div>
+
 <script>
-setTimeout(function(){
+
+function customer(){
 window.location.href="customer.html"
-},1800)
+}
+
+function mechanic(){
+window.location.href="mechanic-login.html"
+}
+
 </script>
 
 </body>

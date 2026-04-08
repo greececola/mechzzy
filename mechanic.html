@@ -217,6 +217,11 @@ ${data.name} - ${data.phone}
 <br>
 Distance: ${d.toFixed(1)} km
 
+<div style="margin-top:10px">
+<input id="pin-${id}" placeholder="Enter customer PIN" style="width:100%;padding:10px;background:#000;border:1px solid #333;color:white;border-radius:8px">
+<button onclick="verify('${id}')" style="margin-top:6px;width:100%">Confirm Arrival</button>
+</div>
+
 <div class="timer" id="timer-${id}">
 Auto expire in 15s
 </div>
@@ -276,6 +281,30 @@ mechLng:myLng
 }
 
 function reject(id){}
+
+function verify(id){
+
+let entered = document.getElementById("pin-"+id).value
+
+db.ref("requests/"+id).once("value",snap=>{
+
+let data = snap.val()
+
+if(entered == data.pin){
+
+db.ref("requests/"+id).update({
+status:"completed"
+})
+
+alert("Job completed")
+
+}else{
+alert("Wrong PIN")
+}
+
+})
+
+}
 
 function playSound(){
 document.getElementById("sound").play()
