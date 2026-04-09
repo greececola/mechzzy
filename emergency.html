@@ -66,85 +66,99 @@ projectId: "mechzzy"
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
-let myLat = null
-let myLng = null
+let myLat=null
+let myLng=null
 
-navigator.geolocation.getCurrentPosition(function(pos){
-myLat = pos.coords.latitude
-myLng = pos.coords.longitude
+navigator.geolocation.getCurrentPosition(pos=>{
+myLat=pos.coords.latitude
+myLng=pos.coords.longitude
 })
+
+function distance(lat1, lon1, lat2, lon2){
+
+var R = 6371
+var dLat = (lat2-lat1) * Math.PI/180
+var dLon = (lon2-lon1) * Math.PI/180
+
+var a =
+Math.sin(dLat/2)*Math.sin(dLat/2)+
+Math.cos(lat1*Math.PI/180)*
+Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)*
+Math.sin(dLon/2)
+
+var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+return R * c
+}
 
 function sendRequest(){
 
-let id = Date.now()
-
-let pin = Math.floor(1000 + Math.random()*9000)
+let id=Date.now()
+let pin=Math.floor(1000+Math.random()*9000)
 
 db.ref("requests/"+id).set({
-name:document.getElementById("name").value,
-phone:document.getElementById("phone").value,
-vehicle:document.getElementById("vehicle").value,
-problem:document.getElementById("problem").value,
+name:name.value,
+phone:phone.value,
+vehicle:vehicle.value,
+problem:problem.value,
 lat:myLat,
 lng:myLng,
 status:"pending",
 pin:pin
 })
 
-document.getElementById("status").innerHTML =
+status.innerHTML=
 "Searching mechanic...<br>Your PIN: <b>"+pin+"</b>"
+
+listen(id)
+}
 
 function listen(id){
 
 db.ref("requests/"+id).on("value",snap=>{
 
-let data = snap.val()
-
+let data=snap.val()
 if(!data) return
 
-// still searching
 if(data.status=="pending"){
-status.innerHTML="Searching nearby mechanic..."
+status.innerHTML=
+"Searching mechanic...<br>Your PIN: <b>"+data.pin+"</b>"
 }
 
-// mechanic accepted
 if(data.status=="assigned"){
 
-let d = distance(
+let eta="calculating..."
+
+if(data.mechLat){
+
+let d=distance(
 myLat,
 myLng,
 data.mechLat,
 data.mechLng
 )
 
-let eta = Math.round((d/30)*60)
+eta=Math.round((d/30)*60)+" mins"
+}
 
-status.innerHTML = `
-Mechanic on the way
+status.innerHTML=`
+<b>Mechanic Assigned</b><br><br>
 
-${data.mechanicName}
-${data.mechanicPhone}
+Name: ${data.mechanicName}<br>
+Phone: ${data.mechanicPhone}<br><br>
 
-Arriving in ${eta} mins
+ETA: ${eta}<br><br>
 
 Share PIN: <b>${data.pin}</b>
 `
-
 }
 
-// job completed
 if(data.status=="completed"){
 status.innerHTML="Service completed ✅"
 }
 
 })
 }
-
-}
-
-
-
-
 
 </script>
 

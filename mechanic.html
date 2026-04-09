@@ -3,204 +3,58 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
 body{
 margin:0;
+font-family:'Inter', sans-serif;
 background:#000;
 color:#fff;
-font-family:Arial;
 }
 
 .header{
-padding:16px;
-font-size:22px;
+padding:18px;
+font-weight:700;
+font-size:20px;
 border-bottom:1px solid #222;
-}
-
-.container{
-padding:15px;
 }
 
 .card{
 background:#111;
 border:1px solid #222;
 border-radius:14px;
-padding:15px;
-margin-bottom:12px;
+padding:16px;
+margin:12px;
+cursor:pointer;
 }
 
-button{
-padding:12px;
-border-radius:10px;
-border:none;
-margin-top:8px;
-}
-
-.accept{
-background:#fff;
-color:#000;
-}
-
-.reject{
-background:#111;
-color:#fff;
-border:1px solid #333;
-}
-
-input{
-width:100%;
-padding:12px;
-background:#000;
-border:1px solid #333;
-color:white;
-border-radius:8px;
-margin-top:10px;
+.desc{
+color:#aaa;
+font-size:14px;
+margin-top:4px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">Mechanic</div>
+<div class="header">Mechzzy</div>
 
-<div class="container" id="requests"></div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<script>
-
-var firebaseConfig = {
-apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
-authDomain: "mechzzy.firebaseapp.com",
-databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId: "mechzzy"
-};
-
-firebase.initializeApp(firebaseConfig);
-var db = firebase.database();
-
-let myLat,myLng
-
-navigator.geolocation.getCurrentPosition(pos=>{
-myLat=pos.coords.latitude
-myLng=pos.coords.longitude
-})
-
-let mechanicName = localStorage.getItem("mechanicName") || "Mechanic"
-let mechanicPhone = localStorage.getItem("mechanicPhone") || ""
-
-listen()
-
-function listen(){
-
-db.ref("requests").on("value",snap=>{
-
-requests.innerHTML=""
-
-snap.forEach(child=>{
-
-let id=child.key
-let data=child.val()
-
-if(data.status!="pending") return
-
-let div=document.createElement("div")
-div.className="card"
-
-div.innerHTML=`
-<b>${data.vehicle}</b> - ${data.problem}<br>
-${data.name} - ${data.phone}
-
-<br><br>
-
-<button class="accept" onclick="accept('${id}')">
-Accept
-</button>
-
-<button class="reject" onclick="reject('${id}')">
-Reject
-</button>
-`
-
-requests.appendChild(div)
-
-})
-
-})
-
-}
-
-function accept(id){
-
-db.ref("requests/"+id).once("value",snap=>{
-
-let data=snap.val()
-
-db.ref("requests/"+id).update({
-status:"assigned",
-mechanicName:mechanicName,
-mechanicPhone:mechanicPhone,
-mechLat:myLat,
-mechLng:myLng
-})
-
-requests.innerHTML=`
-
-<div class="card">
-
-<h3>Heading to customer</h3>
-
-${data.name}<br>
-${data.phone}<br>
-${data.vehicle}<br>
-${data.problem}
-
-<input id="pin-${id}" placeholder="Enter customer PIN">
-
-<button class="accept" onclick="verify('${id}')">
-Complete Job
-</button>
-
+<div class="card" onclick="location='emergency.html'">
+🚨 Emergency Help
+<div class="desc">Find nearby mechanic immediately</div>
 </div>
 
-`
+<div class="card">
+📅 Schedule Service
+<div class="desc">Coming soon</div>
+</div>
 
-})
-
-}
-
-function verify(id){
-
-let entered=document.getElementById("pin-"+id).value
-
-db.ref("requests/"+id).once("value",snap=>{
-
-let data=snap.val()
-
-if(entered==data.pin){
-
-db.ref("requests/"+id).update({
-status:"completed"
-})
-
-alert("Job completed")
-
-requests.innerHTML=""
-
-}else{
-alert("Wrong PIN")
-}
-
-})
-
-}
-
-function reject(id){
-db.ref("requests/"+id).remove()
-}
-
-</script>
+<div class="card">
+📜 Request History
+<div class="desc">Coming soon</div>
+</div>
 
 </body>
 </html>
