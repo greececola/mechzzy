@@ -94,20 +94,20 @@ pin:pin
 document.getElementById("status").innerHTML =
 "Searching mechanic...<br>Your PIN: <b>"+pin+"</b>"
 
-listen(id)
-
-}
-
 function listen(id){
 
 db.ref("requests/"+id).on("value",snap=>{
 
-let data=snap.val()
+let data = snap.val()
 
+if(!data) return
+
+// still searching
 if(data.status=="pending"){
-status.innerHTML="Searching mechanic..."
+status.innerHTML="Searching nearby mechanic..."
 }
 
+// mechanic accepted
 if(data.status=="assigned"){
 
 let d = distance(
@@ -119,17 +119,32 @@ data.mechLng
 
 let eta = Math.round((d/30)*60)
 
-status.innerHTML=
-"Mechanic assigned<br>"+
-data.mechanicName+"<br>"+
-"Arriving in "+eta+" mins<br>"+
-"Share PIN: "+data.pin
+status.innerHTML = `
+Mechanic on the way
 
+${data.mechanicName}
+${data.mechanicPhone}
+
+Arriving in ${eta} mins
+
+Share PIN: <b>${data.pin}</b>
+`
+
+}
+
+// job completed
+if(data.status=="completed"){
+status.innerHTML="Service completed ✅"
 }
 
 })
+}
 
 }
+
+
+
+
 
 </script>
 
