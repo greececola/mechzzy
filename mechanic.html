@@ -9,312 +9,137 @@ margin:0;
 background:#000;
 color:#fff;
 font-family:Inter;
-padding-bottom:70px;
 }
 
 .header{
-padding:18px;
-font-size:20px;
+padding:20px;
+font-size:22px;
+font-weight:600;
 border-bottom:1px solid #222;
 }
 
-.toggle{
-background:#111;
-padding:12px;
-margin:12px;
+.status{
+margin:15px;
+padding:14px;
 border-radius:10px;
 text-align:center;
-border:1px solid #222;
-cursor:pointer;
+font-weight:600;
 }
 
-.online{
-background:#065f46;
-}
+.online{background:#0f5132;}
+.offline{background:#333;}
 
 .card{
 background:#111;
-margin:12px;
-padding:16px;
-border-radius:12px;
+margin:15px;
+padding:18px;
+border-radius:14px;
 border:1px solid #222;
 }
 
-button{
-margin-top:10px;
-padding:12px;
-width:100%;
-background:white;
-color:black;
-border:none;
-border-radius:8px;
+.title{
+font-size:14px;
+color:#aaa;
+margin-bottom:8px;
 }
 
-input{
-margin-top:10px;
+.btn{
+background:white;
+color:black;
 padding:12px;
+border-radius:8px;
+text-align:center;
+margin-top:12px;
+font-weight:600;
+cursor:pointer;
+}
+
+.input{
 width:100%;
+padding:12px;
 background:#000;
 border:1px solid #333;
-color:white;
 border-radius:8px;
+color:white;
+margin-top:8px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">Mechanic</div>
+<div class="header">Mechanic Dashboard</div>
 
-<div class="toggle" onclick="toggleOnline()" id="toggle">
-Offline
+<div id="status" class="status">Checking...</div>
+
+<div class="card" id="jobBox" style="display:none">
+
+<div class="title">🚗 Current Job</div>
+<div>Heading to customer</div>
+
+<div class="btn" onclick="arrived()">Arrived</div>
+
 </div>
 
-<div id="requests"></div>
+<div class="card" id="pinBox" style="display:none">
 
-<audio id="sound">
-<source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
-</audio>
+<div class="title">🔐 Verify Customer</div>
+<input id="pin" class="input" placeholder="Enter PIN">
 
-<!-- ✅ ROLE PROTECTION -->
-<script>
-if(localStorage.getItem("role") !== "mechanic"){
-location.href="login.html"
-}
-</script>
+<div class="btn" onclick="complete()">Complete Service</div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</div>
+
+<div class="card" id="doneBox" style="display:none">
+
+✅ Service Completed
+
+</div>
 
 <script>
 
-var firebaseConfig = {
-apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
-authDomain: "mechzzy.firebaseapp.com",
-databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId: "mechzzy"
-};
+let online = localStorage.getItem("online") || "false"
+let job = localStorage.getItem("job") || "none"
 
-firebase.initializeApp(firebaseConfig);
-var db = firebase.database();
+let statusBox = document.getElementById("status")
 
-let online = false
-let listener = null
-
-let myLat = null
-let myLng = null
-
-navigator.geolocation.getCurrentPosition(pos=>{
-myLat = pos.coords.latitude
-myLng = pos.coords.longitude
-})
-
-// get mechanic info
-let mechanicName = localStorage.getItem("mechanicName")
-let mechanicPhone = localStorage.getItem("mechanicPhone")
-
-if(!mechanicName || !mechanicPhone){
-alert("Please login again")
-location.href="login.html"
-}
-
-// distance formula
-function distance(lat1, lon1, lat2, lon2){
-
-var R = 6371
-var dLat = (lat2-lat1) * Math.PI/180
-var dLon = (lon2-lon1) * Math.PI/180
-
-var a =
-Math.sin(dLat/2) * Math.sin(dLat/2) +
-Math.cos(lat1*Math.PI/180) *
-Math.cos(lat2*Math.PI/180) *
-Math.sin(dLon/2) *
-Math.sin(dLon/2)
-
-var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-return R * c
-
-}
-
-function toggleOnline(){
-
-online = !online
-
-if(online){
-toggle.innerText="Online"
-toggle.classList.add("online")
-listen()
+if(online==="true"){
+statusBox.innerText="Online"
+statusBox.classList.add("online")
 }else{
-toggle.innerText="Offline"
-toggle.classList.remove("online")
-requests.innerHTML=""
-
-if(listener){
-db.ref("requests").off("value",listener)
-}
+statusBox.innerText="Offline"
+statusBox.classList.add("offline")
 }
 
+if(job==="accepted"){
+document.getElementById("jobBox").style.display="block"
 }
 
-function listen(){
-
-listener = db.ref("requests").on("value",snap=>{
-
-if(!online) return
-
-requests.innerHTML=""
-
-snap.forEach(child=>{
-
-let id = child.key
-let d = child.val()
-
-if(d.status!="pending") return
-if(!d.lat || !d.lng || !myLat || !myLng) return
-
-let dist = distance(myLat,myLng,d.lat,d.lng)
-
-requests.innerHTML+=`
-<div class="card">
-
-<b>${d.vehicle}</b><br>
-Issue: ${d.problem}<br>
-Distance: ${dist.toFixed(1)} km
-
-<button onclick="accept('${id}')">
-Accept
-</button>
-
-</div>
-`
-
-})
-
-if(requests.innerHTML==""){
-requests.innerHTML="<div class='card'>No requests</div>"
+if(job==="arrived"){
+document.getElementById("pinBox").style.display="block"
 }
 
-})
-
+if(job==="done"){
+document.getElementById("doneBox").style.display="block"
 }
 
-function accept(id){
-
-db.ref("requests/"+id).once("value",snap=>{
-
-let data = snap.val()
-
-if(data.status!="pending"){
-alert("Already taken")
-return
+function arrived(){
+localStorage.setItem("job","arrived")
+location.reload()
 }
 
-db.ref("requests/"+id).update({
-status:"accepted",
-mechanicName:mechanicName,
-mechanicPhone:mechanicPhone,
-mechLat:myLat,
-mechLng:myLng
-})
+function complete(){
+let pin=document.getElementById("pin").value
 
-requests.innerHTML=`
-<div class="card">
-
-Heading to customer...
-
-<button onclick="arrived('${id}')">
-Arrived
-</button>
-
-</div>
-`
-
-})
-
-}
-
-function arrived(id){
-
-db.ref("requests/"+id).update({
-status:"arrived"
-})
-
-requests.innerHTML=`
-
-<div class="card">
-
-Enter customer PIN
-
-<input id="pin">
-
-<button onclick="complete('${id}')">
-Complete Service
-</button>
-
-</div>
-
-`
-
-}
-
-function complete(id){
-
-let entered =
-document.getElementById("pin").value
-
-db.ref("requests/"+id).once("value",snap=>{
-
-let data = snap.val()
-
-if(entered == data.pin){
-
-db.ref("requests/"+id).update({
-status:"completed"
-})
-
-requests.innerHTML=`
-<div class="card">
-Service Completed ✅
-</div>
-`
-
+if(pin==="9451"){
+localStorage.setItem("job","done")
+location.reload()
 }else{
 alert("Wrong PIN")
 }
-
-})
-
 }
 
 </script>
-
-<!-- Bottom Nav -->
-<div style="
-position:fixed;
-bottom:0;
-width:100%;
-background:#111;
-display:flex;
-border-top:1px solid #222;
-">
-
-<div style="flex:1;text-align:center;padding:12px">
-📥 Requests
-</div>
-
-<div style="flex:1;text-align:center;padding:12px"
-onclick="location='mechanic-activity.html'">
-📊 Activity
-</div>
-
-<div style="flex:1;text-align:center;padding:12px"
-onclick="location='mechanic-account.html'">
-👤 Account
-</div>
-
-</div>
 
 </body>
 </html>

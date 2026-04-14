@@ -1,37 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter;
+}
+
+.header{
+padding:20px;
+font-size:22px;
+font-weight:600;
+border-bottom:1px solid #222;
+}
+
+.profile{
+text-align:center;
+padding:25px 15px;
+}
+
+.avatar{
+width:70px;
+height:70px;
+border-radius:50%;
+background:#222;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+margin:auto;
+}
+
+.name{
+margin-top:10px;
+font-size:18px;
+font-weight:600;
+}
+
+.phone{
+color:#aaa;
+font-size:14px;
+margin-top:4px;
+}
+
+.card{
+background:#111;
+margin:12px;
+padding:16px;
+border-radius:14px;
+border:1px solid #222;
+}
+
+.option{
+padding:14px 0;
+border-bottom:1px solid #222;
+cursor:pointer;
+}
+
+.option:last-child{
+border:none;
+}
+
+.logout{
+background:white;
+color:black;
+text-align:center;
+padding:14px;
+margin:20px;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
 <div class="header">Account</div>
 
-<div class="card">
-<b>Name:</b> <span id="name"></span><br>
-<b>Phone:</b> <span id="phone"></span>
+<div class="profile">
+<div class="avatar">👤</div>
+<div class="name" id="name">User</div>
+<div class="phone" id="phone">0000000000</div>
 </div>
 
 <div class="card">
-<button onclick="logout()">Logout</button>
+
+<div class="option">📜 My Requests</div>
+<div class="option">💳 Payments</div>
+<div class="option">📞 Help & Support</div>
+<div class="option">⚙️ Settings</div>
+
+</div>
+
+<div class="logout" onclick="logout()">
+Logout
 </div>
 
 <script>
-let role = localStorage.getItem("role")
 
-if(role !== "customer"){
-location.href = "login.html"
-}
-</script>
+document.getElementById("name").innerText =
+localStorage.getItem("name") || "User"
 
-<script>
-
-let name = localStorage.getItem("name")
-let phone = localStorage.getItem("phone")
-
-if(!name || !phone){
-location.href="login.html"
-}
-
-document.getElementById("name").innerText = name
-document.getElementById("phone").innerText = phone
+document.getElementById("phone").innerText =
+localStorage.getItem("phone") || "Not set"
 
 function logout(){
 localStorage.clear()
-location.href="login.html"
+location.href="index.html"
 }
 
 </script>
+
+</body>
+</html>
