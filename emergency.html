@@ -3,56 +3,151 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Emergency</title>
+
 <style>
+
 body{
 margin:0;
-background:black;
-color:white;
+background:#000;
+color:#fff;
 font-family:Arial;
-padding:15px;
+padding-bottom:100px;
 }
 
-input{
-width:100%;
-padding:14px;
-margin-bottom:10px;
+.header{
+padding:18px;
+font-size:20px;
+font-weight:600;
+border-bottom:1px solid #222;
+}
+
+.section{
+padding:16px;
+}
+
+.title{
+font-size:16px;
+margin-bottom:12px;
+color:#aaa;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.card{
 background:#111;
 border:1px solid #222;
-color:white;
-border-radius:10px;
-}
-
-button{
-padding:12px 20px;
-background:white;
-color:black;
-border:none;
-border-radius:10px;
+padding:16px;
+border-radius:12px;
+text-align:center;
 cursor:pointer;
 }
 
-.status{
-margin-top:20px;
-background:#111;
-padding:15px;
-border-radius:10px;
+.card.active{
+border:1px solid white;
+background:#1a1a1a;
 }
+
+.upload{
+background:#111;
+border:1px dashed #444;
+padding:20px;
+text-align:center;
+border-radius:12px;
+margin-top:10px;
+cursor:pointer;
+}
+
+.preview{
+width:100%;
+border-radius:10px;
+margin-top:10px;
+}
+
+.button{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+color:black;
+padding:16px;
+text-align:center;
+font-weight:600;
+cursor:pointer;
+}
+
 </style>
 </head>
 
 <body>
 
-<input id="name" placeholder="Name">
-<input id="phone" placeholder="Phone">
-<input id="vehicle" placeholder="Vehicle">
-<input id="problem" placeholder="Problem">
+<div class="header">
+Emergency Help
+</div>
 
-<button onclick="sendRequest()">Request Mechanic</button>
 
-<div id="status" class="status"></div>
+<div class="section">
+<div class="title">Select Vehicle</div>
+
+<div class="grid">
+
+<div class="card" onclick="selectVehicle(this,'Car')">🚗 Car</div>
+<div class="card" onclick="selectVehicle(this,'Bike')">🏍 Bike</div>
+<div class="card" onclick="selectVehicle(this,'Scooty')">🛵 Scooty</div>
+<div class="card" onclick="selectVehicle(this,'Other')">🚙 Other</div>
+
+</div>
+</div>
+
+
+
+<div class="section">
+<div class="title">What's the issue?</div>
+
+<div class="grid">
+
+<div class="card" onclick="selectProblem(this,'Battery')">🔋 Battery</div>
+<div class="card" onclick="selectProblem(this,'Puncture')">🛞 Puncture</div>
+<div class="card" onclick="selectProblem(this,'Fuel')">⛽ Fuel</div>
+<div class="card" onclick="selectProblem(this,'Not Starting')">⚙️ Not Starting</div>
+<div class="card" onclick="selectProblem(this,'Overheat')">🔥 Overheat</div>
+<div class="card" onclick="selectProblem(this,'Accident')">💥 Accident</div>
+
+</div>
+</div>
+
+
+
+<div class="section">
+
+<div class="title">Upload Vehicle Photo (optional)</div>
+
+<div class="upload" onclick="pickImage()">
+📷 Tap to add photo
+</div>
+
+<img id="preview" class="preview" style="display:none"/>
+
+<input type="file" id="file" accept="image/*" style="display:none">
+
+</div>
+
+
+
+<div class="button" onclick="requestMechanic()">
+Request Mechanic
+</div>
+
+
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 
 <script>
 
@@ -66,98 +161,92 @@ projectId: "mechzzy"
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
-let myLat=null
-let myLng=null
+
+let vehicle = ""
+let problem = ""
+let photo = ""
+
+function selectVehicle(el,val){
+
+document.querySelectorAll(".grid")[0]
+.querySelectorAll(".card")
+.forEach(c=>c.classList.remove("active"))
+
+el.classList.add("active")
+vehicle = val
+
+}
+
+function selectProblem(el,val){
+
+document.querySelectorAll(".grid")[1]
+.querySelectorAll(".card")
+.forEach(c=>c.classList.remove("active"))
+
+el.classList.add("active")
+problem = val
+
+}
+
+
+
+function pickImage(){
+document.getElementById("file").click()
+}
+
+document.getElementById("file").addEventListener("change",function(e){
+
+let reader = new FileReader()
+
+reader.onload=function(){
+photo = reader.result
+preview.src = photo
+preview.style.display="block"
+}
+
+reader.readAsDataURL(e.target.files[0])
+
+})
+
+
 
 navigator.geolocation.getCurrentPosition(pos=>{
-myLat=pos.coords.latitude
-myLng=pos.coords.longitude
+window.lat = pos.coords.latitude
+window.lng = pos.coords.longitude
 })
 
-function distance(lat1, lon1, lat2, lon2){
 
-var R = 6371
-var dLat = (lat2-lat1) * Math.PI/180
-var dLon = (lon2-lon1) * Math.PI/180
+function requestMechanic(){
 
-var a =
-Math.sin(dLat/2)*Math.sin(dLat/2)+
-Math.cos(lat1*Math.PI/180)*
-Math.cos(lat2*Math.PI/180)*
-Math.sin(dLon/2)*
-Math.sin(dLon/2)
-
-var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-return R * c
+if(!vehicle){
+alert("Select vehicle")
+return
 }
 
-function sendRequest(){
+if(!problem){
+alert("Select problem")
+return
+}
 
-let id=Date.now()
-let pin=Math.floor(1000+Math.random()*9000)
+let id = Date.now()
+
+let pin = Math.floor(1000 + Math.random()*9000)
 
 db.ref("requests/"+id).set({
-name:name.value,
-phone:phone.value,
-vehicle:vehicle.value,
-problem:problem.value,
-lat:myLat,
-lng:myLng,
+
+vehicle:vehicle,
+problem:problem,
+photo:photo || "",
+lat:window.lat,
+lng:window.lng,
 status:"pending",
-pin:pin
-})
-
-status.innerHTML=
-"Searching mechanic...<br>Your PIN: <b>"+pin+"</b>"
-
-listen(id)
-}
-
-function listen(id){
-
-db.ref("requests/"+id).on("value",snap=>{
-
-let data=snap.val()
-if(!data) return
-
-if(data.status=="pending"){
-status.innerHTML=
-"Searching mechanic...<br>Your PIN: <b>"+data.pin+"</b>"
-}
-
-if(data.status=="assigned"){
-
-let eta="calculating..."
-
-if(data.mechLat){
-
-let d=distance(
-myLat,
-myLng,
-data.mechLat,
-data.mechLng
-)
-
-eta=Math.round((d/30)*60)+" mins"
-}
-
-status.innerHTML=`
-<b>Mechanic Assigned</b><br><br>
-
-Name: ${data.mechanicName}<br>
-Phone: ${data.mechanicPhone}<br><br>
-
-ETA: ${eta}<br><br>
-
-Share PIN: <b>${data.pin}</b>
-`
-}
-
-if(data.status=="completed"){
-status.innerHTML="Service completed ✅"
-}
+pin:pin,
+created:Date.now()
 
 })
+
+alert("Searching mechanic...\nPIN: "+pin)
+
 }
 
 </script>

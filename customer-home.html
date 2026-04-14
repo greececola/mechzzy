@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter;
+padding-bottom:70px;
+}
+
+.header{
+padding:20px;
+font-size:22px;
+font-weight:600;
+}
+
+.card{
+background:#111;
+margin:15px;
+padding:18px;
+border-radius:14px;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:#111;
+display:flex;
+}
+
+.tab{
+flex:1;
+text-align:center;
+padding:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Mechzzy</div>
+
+<div class="card" onclick="emergency()">
+🚨 Emergency Help
+</div>
+
+<div class="card">
+📅 Schedule Service
+</div>
+
+<script>
+function emergency(){
+location="emergency.html"
+}
+</script>
+
+<div class="bottom">
+<div class="tab">Home</div>
+<div class="tab" onclick="location='customer-services.html'">Services</div>
+<div class="tab" onclick="location='customer-activity.html'">Activity</div>
+<div class="tab" onclick="location='customer-account.html'">Account</div>
+</div>
+
+</body>
+</html>

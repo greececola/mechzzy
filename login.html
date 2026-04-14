@@ -8,86 +8,39 @@ body{
 margin:0;
 background:black;
 color:white;
-font-family:Arial;
-}
-
-.container{
+font-family:Inter;
 padding:20px;
-}
-
-input{
-width:100%;
-padding:14px;
-margin-bottom:10px;
-background:#111;
-border:1px solid #222;
-color:white;
-border-radius:10px;
 }
 
 button{
 width:100%;
-padding:14px;
-background:white;
-color:black;
-border:none;
-border-radius:10px;
+padding:16px;
+margin-top:10px;
+background:#111;
+border:1px solid #222;
+color:white;
+border-radius:12px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<h2>Login as</h2>
 
-<h2>Login</h2>
-
-<input id="phone" placeholder="Phone number">
-
-<button onclick="sendOTP()">Send OTP</button>
-
-<div id="otpBox" style="display:none">
-<input id="otp" placeholder="Enter OTP">
-<button onclick="verify()">Verify</button>
-</div>
-
-</div>
+<button onclick="customer()">Customer</button>
+<button onclick="mechanic()">Mechanic</button>
 
 <script>
-
-let generated
-
-function sendOTP(){
-
-generated = Math.floor(1000 + Math.random()*9000)
-
-alert("OTP: "+generated)
-
-otpBox.style.display="block"
-
+function customer(){
+localStorage.setItem("role","customer")
+location="customer-home.html"
 }
 
-function verify(){
-
-let entered = otp.value
-let role = localStorage.getItem("role")
-
-if(entered == generated){
-
-localStorage.setItem("user",phone.value)
-
-if(role=="customer"){
-location.href="customer.html"
-}else{
-location.href="mechanic.html"
+function mechanic(){
+localStorage.setItem("role","mechanic")
+location="mechanic-home.html"
 }
-
-}else{
-alert("Wrong OTP")
-}
-
-}
-
 </script>
 
 </body>

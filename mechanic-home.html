@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter;
+padding-bottom:70px;
+}
+
+.header{
+padding:20px;
+font-size:22px;
+}
+
+.card{
+background:#111;
+margin:15px;
+padding:15px;
+border-radius:12px;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:#111;
+display:flex;
+}
+
+.tab{
+flex:1;
+text-align:center;
+padding:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Mechanic</div>
+
+<div id="requests"></div>
+
+<script src="firebase.js"></script>
+
+<script>
+
+let mechanicName = localStorage.getItem("mechanicName")
+
+if(!mechanicName){
+mechanicName = prompt("Your name")
+localStorage.setItem("mechanicName",mechanicName)
+}
+
+db.ref("requests").on("value",snap=>{
+
+requests.innerHTML=""
+
+snap.forEach(child=>{
+
+let id=child.key
+let d=child.val()
+
+if(d.status!="pending") return
+
+requests.innerHTML+=`
+<div class="card">
+${d.vehicle} - ${d.problem}<br>
+${d.name}<br>
+
+<button onclick="accept('${id}')">Accept</button>
+</div>
+`
+
+})
+
+})
+
+function accept(id){
+
+db.ref("requests/"+id).update({
+status:"assigned",
+mechanicName:mechanicName,
+mechanicPhone:""
+})
+
+}
+
+</script>
+
+<div class="bottom">
+<div class="tab">Requests</div>
+<div class="tab" onclick="location='mechanic-activity.html'">Activity</div>
+<div class="tab" onclick="location='mechanic-account.html'">Account</div>
+</div>
+
+</body>
+</html>

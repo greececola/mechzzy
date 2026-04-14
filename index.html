@@ -2,79 +2,52 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{
 margin:0;
-background:#000;
-color:#fff;
-font-family:Arial;
-}
-
-/* splash */
-.splash{
-height:100vh;
+background:black;
+color:white;
+font-family:Inter;
 display:flex;
 justify-content:center;
 align-items:center;
+height:100vh;
 flex-direction:column;
 }
-
-/* hidden initially */
-.buttons{
-display:none;
-position:absolute;
-bottom:40px;
-width:100%;
-padding:20px;
-}
-
 .logo{
-font-size:36px;
-letter-spacing:6px;
-font-weight:700;
+font-size:32px;
+letter-spacing:5px;
 }
-
 .tag{
 color:#aaa;
 margin-top:10px;
-}
-
-button{
-width:100%;
-padding:16px;
-margin-bottom:10px;
-background:#111;
-border:1px solid #222;
-color:white;
-border-radius:12px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="splash">
 <div class="logo">MECHZZY</div>
 <div class="tag">Roadside Assistance</div>
-</div>
-
-<div class="buttons" id="buttons">
-<button onclick="login('customer')">Login as Customer</button>
-<button onclick="login('mechanic')">Login as Mechanic</button>
-</div>
 
 <script>
-
 setTimeout(()=>{
-document.getElementById("buttons").style.display="block"
-},1500)
 
-function login(role){
-localStorage.setItem("role",role)
-window.location.href="login.html"
+let role = localStorage.getItem("userRole")
+
+if(role=="customer"){
+location.href="customer.html"
 }
 
+else if(role=="mechanic"){
+location.href="mechanic.html"
+}
+
+else{
+location.href="login.html"
+}
+
+},2000)
 </script>
 
 </body>
