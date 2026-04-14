@@ -33,18 +33,18 @@ margin-top:10px;
 <script>
 setTimeout(()=>{
 
-let role = localStorage.getItem("userRole")
+let role = localStorage.getItem("role")
 
 if(role=="customer"){
-location.href="customer.html"
+window.location.replace("customer.html")
 }
 
 else if(role=="mechanic"){
-location.href="mechanic.html"
+window.location.replace("mechanic.html")
 }
 
 else{
-location.href="login.html"
+window.location.replace("login.html")
 }
 
 },2000)

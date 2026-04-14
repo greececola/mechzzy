@@ -22,6 +22,17 @@ background:#111;
 margin:15px;
 padding:15px;
 border-radius:12px;
+border:1px solid #222;
+}
+
+button{
+margin-top:10px;
+padding:12px;
+background:white;
+color:black;
+border:none;
+border-radius:8px;
+width:100%;
 }
 
 .bottom{
@@ -46,6 +57,8 @@ padding:12px;
 
 <div id="requests"></div>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="firebase.js"></script>
 
 <script>
@@ -70,10 +83,14 @@ if(d.status!="pending") return
 
 requests.innerHTML+=`
 <div class="card">
-${d.vehicle} - ${d.problem}<br>
-${d.name}<br>
 
-<button onclick="accept('${id}')">Accept</button>
+<b>${d.vehicle}</b><br>
+Issue: ${d.problem}<br>
+
+<button onclick="accept('${id}')">
+Accept Request
+</button>
+
 </div>
 `
 
@@ -84,10 +101,23 @@ ${d.name}<br>
 function accept(id){
 
 db.ref("requests/"+id).update({
-status:"assigned",
+status:"accepted",
 mechanicName:mechanicName,
-mechanicPhone:""
+eta:"8 min"
 })
+
+// show heading screen
+requests.innerHTML=`
+<div class="card">
+
+Heading to customer...
+
+<br><br>
+
+Ask customer for PIN to complete
+
+</div>
+`
 
 }
 
@@ -95,8 +125,8 @@ mechanicPhone:""
 
 <div class="bottom">
 <div class="tab">Requests</div>
-<div class="tab" onclick="location='mechanic-activity.html'">Activity</div>
-<div class="tab" onclick="location='mechanic-account.html'">Account</div>
+<div class="tab">Activity</div>
+<div class="tab">Account</div>
 </div>
 
 </body>

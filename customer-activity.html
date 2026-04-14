@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter;
+}
+
+.header{
+padding:18px;
+font-size:20px;
+border-bottom:1px solid #222;
+}
+
+.card{
+background:#111;
+margin:12px;
+padding:15px;
+border-radius:12px;
+border:1px solid #222;
+}
+
+.status{
+margin-top:6px;
+color:#aaa;
+font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Activity</div>
+
+<div id="list"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+
+let history = JSON.parse(
+localStorage.getItem("history") || "[]"
+)
+
+if(history.length==0){
+list.innerHTML="<p style='padding:20px'>No activity</p>"
+}
+
+history.reverse().forEach(id=>{
+
+db.ref("requests/"+id).once("value",snap=>{
+
+let d = snap.val()
+if(!d) return
+
+list.innerHTML += `
+<div class="card">
+
+<b>${d.vehicle}</b><br>
+Issue: ${d.problem}
+
+<div class="status">
+Status: ${d.status}
+</div>
+
+</div>
+`
+
+})
+
+})
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Finding Mechanic</title>
+
+<style>
+body{
+background:black;
+color:white;
+font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+margin:0;
+padding:0;
+}
+
+.container{
+padding:20px;
+}
+
+.title{
+font-size:22px;
+font-weight:600;
+margin-top:20px;
+}
+
+.sub{
+color:gray;
+margin-top:5px;
+}
+
+.loader{
+width:60px;
+height:60px;
+border:4px solid #222;
+border-top:4px solid white;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:40px auto;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+.card{
+background:#111;
+padding:16px;
+border-radius:14px;
+margin-top:20px;
+border:1px solid #222;
+}
+
+.label{
+color:gray;
+font-size:13px;
+}
+
+.value{
+margin-top:4px;
+font-size:16px;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#111;
+padding:20px;
+text-align:center;
+border-top:1px solid #222;
+}
+
+.pin{
+font-size:28px;
+letter-spacing:8px;
+margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Finding nearby mechanic</div>
+<div class="sub">Please wait while we connect you</div>
+
+<div class="loader"></div>
+
+<div class="card">
+<div class="label">Vehicle</div>
+<div class="value" id="vehicle">Car</div>
+</div>
+
+<div class="card">
+<div class="label">Issue</div>
+<div class="value" id="issue">Battery</div>
+</div>
+
+<div class="card">
+<div class="label">Location</div>
+<div class="value" id="location">Fetching location...</div>
+</div>
+
+</div>
+
+<div class="bottom">
+Share PIN with mechanic
+<div class="pin" id="pin">----</div>
+</div>
+
+<div style="margin-top:15px;text-align:center">
+<button onclick="cancel()" style="
+padding:12px;
+background:#222;
+color:white;
+border:none;
+border-radius:8px;
+">
+Cancel Request
+</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+
+// get from previous page
+document.getElementById("vehicle").innerText =
+localStorage.getItem("vehicle")
+
+document.getElementById("issue").innerText =
+localStorage.getItem("issue")
+
+// show pin
+const pin = localStorage.getItem("pin")
+document.getElementById("pin").innerText = pin
+
+// location
+navigator.geolocation.getCurrentPosition(function(pos){
+
+let lat = pos.coords.latitude
+let lng = pos.coords.longitude
+
+document.getElementById("location").innerText =
+lat.toFixed(4) + ", " + lng.toFixed(4)
+
+})
+
+// listen mechanic accept
+let id = localStorage.getItem("requestId")
+
+db.ref("requests/"+id).on("value",(snap)=>{
+
+let r = snap.val()
+if(!r) return
+
+if(r.status=="accepted" || r.status=="arrived"){
+
+localStorage.setItem("mechanicName", r.mechanicName)
+
+window.location.href="assigned.html"
+
+}
+
+})
+
+// cancel request
+function cancel(){
+
+let id = localStorage.getItem("requestId")
+
+db.ref("requests/"+id).update({
+status:"cancelled"
+})
+
+location.href="customer.html"
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mechanic Assigned</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+margin:0;
+}
+
+.map{
+height:50vh;
+background:#111;
+display:flex;
+align-items:center;
+justify-content:center;
+color:gray;
+}
+
+.panel{
+background:black;
+padding:20px;
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+margin-top:-20px;
+}
+
+.eta{
+font-size:20px;
+font-weight:600;
+}
+
+.pinbox{
+background:#111;
+padding:12px;
+border-radius:10px;
+margin-top:10px;
+text-align:center;
+letter-spacing:6px;
+font-size:20px;
+}
+
+.card{
+background:#111;
+padding:15px;
+border-radius:14px;
+margin-top:15px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.name{
+font-size:16px;
+font-weight:600;
+}
+
+.rating{
+color:gold;
+font-size:13px;
+margin-top:3px;
+}
+
+.btns{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+.btn{
+flex:1;
+padding:14px;
+border-radius:12px;
+border:none;
+background:#1a1a1a;
+color:white;
+font-size:14px;
+}
+
+.issue{
+margin-top:15px;
+color:gray;
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="map" id="mapText">
+Finding mechanic...
+</div>
+
+<div class="panel">
+
+<div class="eta" id="eta">
+Connecting...
+</div>
+
+<div class="pinbox" id="pin">
+0000
+</div>
+
+<div class="card">
+
+<div>
+<div class="name" id="mechName">Mechanic</div>
+<div class="rating">⭐ 4.7</div>
+</div>
+
+<div>
+Bike Mechanic
+</div>
+
+</div>
+
+<div class="btns">
+<button class="btn" onclick="call()">📞 Call</button>
+<button class="btn">💬 Message</button>
+</div>
+
+<div class="issue">
+Issue: <span id="issue"></span>
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+
+// load basics
+document.getElementById("pin").innerText =
+localStorage.getItem("pin")
+
+document.getElementById("issue").innerText =
+localStorage.getItem("issue")
+
+// user location
+let myLat, myLng
+
+navigator.geolocation.getCurrentPosition(pos=>{
+myLat = pos.coords.latitude
+myLng = pos.coords.longitude
+})
+
+// distance function
+function distance(lat1, lon1, lat2, lon2){
+
+var R = 6371
+var dLat = (lat2-lat1) * Math.PI/180
+var dLon = (lon2-lon1) * Math.PI/180
+
+var a =
+Math.sin(dLat/2) * Math.sin(dLat/2) +
+Math.cos(lat1*Math.PI/180) *
+Math.cos(lat2*Math.PI/180) *
+Math.sin(dLon/2) *
+Math.sin(dLon/2)
+
+var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+return R * c
+
+}
+
+// firebase listener
+let id = localStorage.getItem("requestId")
+
+db.ref("requests/"+id).on("value",(snap)=>{
+
+let data = snap.val()
+if(!data) return
+
+// save phone for calling
+localStorage.setItem("mechanicPhone", data.mechanicPhone)
+
+// show name
+document.getElementById("mechName").innerText =
+data.mechanicName || "Mechanic"
+
+// accepted
+if(data.status=="accepted"){
+
+document.getElementById("eta").innerText =
+"Mechanic on the way"
+
+document.getElementById("mapText").innerText =
+"Mechanic heading to you"
+
+}
+
+// ETA calculation
+if(data.mechLat && data.mechLng && myLat && myLng){
+
+let d = distance(myLat,myLng,data.mechLat,data.mechLng)
+let eta = Math.max(1, Math.round((d/30)*60))
+
+document.getElementById("eta").innerText =
+"Arriving in "+eta+" mins"
+
+}
+
+// arrived
+if(data.status=="arrived"){
+
+document.getElementById("eta").innerText =
+"Mechanic arrived"
+
+document.getElementById("mapText").innerText =
+"Mechanic has reached your location"
+
+}
+
+// completed → show rating UI
+if(data.status=="completed"){
+
+document.body.innerHTML = `
+<div style="padding:30px;text-align:center;">
+
+<h2>Rate your mechanic</h2>
+
+<div id="stars" style="font-size:35px;margin:20px 0;cursor:pointer;">
+<span onclick="rate(1)">⭐</span>
+<span onclick="rate(2)">⭐</span>
+<span onclick="rate(3)">⭐</span>
+<span onclick="rate(4)">⭐</span>
+<span onclick="rate(5)">⭐</span>
+</div>
+
+<div id="selected" style="color:#aaa;margin-bottom:15px">
+Select rating
+</div>
+
+<button onclick="submitRating()">
+Submit
+</button>
+
+</div>
+`
+
+}
+
+})
+
+// ⭐ rating logic
+let selectedRating = 0
+
+function rate(n){
+
+selectedRating = n
+
+let stars = document.querySelectorAll("#stars span")
+
+stars.forEach((s,i)=>{
+s.style.opacity = i < n ? "1" : "0.3"
+})
+
+document.getElementById("selected").innerText =
+n + " star selected"
+
+}
+
+function submitRating(){
+
+if(selectedRating==0){
+alert("Select rating first")
+return
+}
+
+let id = localStorage.getItem("requestId")
+
+db.ref("requests/"+id).update({
+rating: selectedRating
+})
+
+alert("Thanks for your feedback")
+
+location.href="customer.html"
+
+}
+
+// 📞 real call
+function call(){
+
+let phone = localStorage.getItem("mechanicPhone")
+
+if(!phone){
+alert("Phone not available")
+return
+}
+
+window.location.href = "tel:"+phone
+
+}
+
+</script>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ margin:0;
 font-family:'Inter', sans-serif;
 background:#000;
 color:#fff;
+padding-bottom:70px;
 }
 
 .header{
@@ -34,6 +35,22 @@ color:#aaa;
 font-size:14px;
 margin-top:4px;
 }
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:#111;
+display:flex;
+border-top:1px solid #222;
+}
+
+.tab{
+flex:1;
+text-align:center;
+padding:14px;
+font-size:13px;
+}
 </style>
 </head>
 
@@ -51,9 +68,21 @@ margin-top:4px;
 <div class="desc">Coming soon</div>
 </div>
 
-<div class="card">
+<div class="card" onclick="location='customer-activity.html'">
 📜 Request History
-<div class="desc">Coming soon</div>
+<div class="desc">View past requests</div>
+</div>
+
+<div class="bottom">
+<div class="tab">🏠 Home</div>
+
+<div class="tab" onclick="location='customer-activity.html'">
+📊 Activity
+</div>
+
+<div class="tab" onclick="location='customer-account.html'">
+👤 Account
+</div>
 </div>
 
 </body>

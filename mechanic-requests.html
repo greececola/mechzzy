@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Requests</title>
+
+<style>
+body{
+background:black;
+color:white;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+padding:15px;
+}
+
+.card{
+background:#111;
+padding:15px;
+border-radius:14px;
+margin-bottom:12px;
+border:1px solid #222;
+}
+
+.row{
+margin-bottom:6px;
+}
+
+.btn{
+margin-top:10px;
+background:white;
+color:black;
+border:none;
+padding:12px;
+border-radius:10px;
+width:100%;
+font-weight:600;
+}
+
+.empty{
+text-align:center;
+margin-top:40px;
+color:gray;
+}
+</style>
+</head>
+
+<body>
+
+<h2>New Requests</h2>
+
+<div id="list"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+
+db.ref("requests").on("value",(snap)=>{
+
+let html=""
+
+snap.forEach((item)=>{
+
+let r = item.val()
+let id = item.key
+
+if(r.status=="pending"){
+
+html+=`
+<div class="card">
+
+<div class="row">Vehicle: ${r.vehicle}</div>
+<div class="row">Issue: ${r.problem}</div>
+<div class="row">PIN: ${r.pin}</div>
+
+<button class="btn" onclick="accept('${id}')">
+Accept Request
+</button>
+
+</div>
+`
+
+}
+
+})
+
+document.getElementById("list").innerHTML =
+html || "<div class='empty'>No requests</div>"
+
+})
+
+function accept(id){
+
+db.ref("requests/"+id).update({
+status:"accepted",
+mechanic:"Ramesh",
+rating:"4.8",
+eta:"8 min"
+})
+
+alert("Request accepted")
+
+}
+
+</script>
+
+</body>
+</html>

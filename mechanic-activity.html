@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter;
+}
+
+.header{
+padding:18px;
+font-size:20px;
+border-bottom:1px solid #222;
+}
+
+.card{
+background:#111;
+margin:12px;
+padding:16px;
+border-radius:12px;
+border:1px solid #222;
+}
+
+.status{
+color:#aaa;
+font-size:13px;
+margin-top:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Activity</div>
+
+<div id="list"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+
+var firebaseConfig = {
+apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
+authDomain: "mechzzy.firebaseapp.com",
+databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId: "mechzzy"
+};
+
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+
+let mechanicName =
+localStorage.getItem("mechanicName")
+
+db.ref("requests").on("value",snap=>{
+
+list.innerHTML=""
+
+snap.forEach(child=>{
+
+let d = child.val()
+
+if(d.status!="completed") return
+if(d.mechanicName!=mechanicName) return
+
+list.innerHTML+=`
+
+<div class="card">
+
+<b>${d.vehicle}</b><br>
+Issue: ${d.problem}
+
+<div class="status">
+Completed
+</div>
+
+</div>
+
+`
+
+})
+
+if(list.innerHTML==""){
+list.innerHTML="<div class='card'>No activity</div>"
+}
+
+})
+
+</script>
+
+</body>
+</html>

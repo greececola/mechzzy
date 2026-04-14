@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:#fff;
+font-family:Inter;
+}
+
+.header{
+padding:18px;
+font-size:20px;
+border-bottom:1px solid #222;
+}
+
+.card{
+background:#111;
+margin:12px;
+padding:16px;
+border-radius:12px;
+border:1px solid #222;
+}
+
+button{
+margin-top:10px;
+padding:12px;
+width:100%;
+background:white;
+color:black;
+border:none;
+border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Mechanic Account</div>
+
+<div class="card">
+<b>Name:</b> <span id="name"></span>
+</div>
+
+<div class="card">
+<button onclick="logout()">Logout</button>
+</div>
+
+<script>
+
+document.getElementById("name").innerText =
+localStorage.getItem("mechanicName")
+
+function logout(){
+localStorage.clear()
+location.href="index.html"
+}
+
+</script>
+
+</body>
+</html>

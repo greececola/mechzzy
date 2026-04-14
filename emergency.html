@@ -24,6 +24,7 @@ border-bottom:1px solid #222;
 
 .section{
 padding:16px;
+margin-top:20px;
 }
 
 .title{
@@ -48,8 +49,9 @@ cursor:pointer;
 }
 
 .card.active{
-border:1px solid white;
-background:#1a1a1a;
+border:1px solid #fff;
+background:#1f1f1f;
+transform:scale(1.02);
 }
 
 .upload{
@@ -87,7 +89,10 @@ cursor:pointer;
 <body>
 
 <div class="header">
-Emergency Help
+<div style="font-size:22px;font-weight:600">Emergency</div>
+<div style="color:#aaa;font-size:13px;margin-top:4px">
+Find nearby mechanic instantly
+</div>
 </div>
 
 
@@ -229,9 +234,9 @@ return
 }
 
 let id = Date.now()
-
 let pin = Math.floor(1000 + Math.random()*9000)
 
+// save request
 db.ref("requests/"+id).set({
 
 vehicle:vehicle,
@@ -245,7 +250,25 @@ created:Date.now()
 
 })
 
-alert("Searching mechanic...\nPIN: "+pin)
+// save history (MOVE OUTSIDE)
+let history =
+JSON.parse(localStorage.getItem("history") || "[]")
+
+history.push(id)
+
+localStorage.setItem(
+"history",
+JSON.stringify(history)
+)
+
+// save for next screen
+localStorage.setItem("requestId", id)
+localStorage.setItem("pin", pin)
+localStorage.setItem("vehicle", vehicle)
+localStorage.setItem("issue", problem)
+
+// go to searching
+window.location.href = "searching.html"
 
 }
 
