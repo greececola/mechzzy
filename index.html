@@ -36,15 +36,13 @@ setTimeout(()=>{
 let role = localStorage.getItem("role")
 
 if(role=="customer"){
-window.location.replace("customer.html")
+location.href="customer.html"
 }
-
 else if(role=="mechanic"){
-window.location.replace("mechanic.html")
+location.href="mechanic.html"
 }
-
 else{
-window.location.replace("login.html")
+location.href="login.html"
 }
 
 },2000)

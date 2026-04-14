@@ -50,6 +50,14 @@ border-radius:8px;
 </div>
 
 <script>
+let role = localStorage.getItem("role")
+
+if(role !== "mechanic"){
+location.href = "login.html"
+}
+</script>
+
+<script>
 
 document.getElementById("name").innerText =
 localStorage.getItem("mechanicName")

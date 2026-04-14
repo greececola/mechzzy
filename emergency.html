@@ -95,41 +95,31 @@ Find nearby mechanic instantly
 </div>
 </div>
 
-
 <div class="section">
 <div class="title">Select Vehicle</div>
 
 <div class="grid">
-
 <div class="card" onclick="selectVehicle(this,'Car')">🚗 Car</div>
 <div class="card" onclick="selectVehicle(this,'Bike')">🏍 Bike</div>
 <div class="card" onclick="selectVehicle(this,'Scooty')">🛵 Scooty</div>
 <div class="card" onclick="selectVehicle(this,'Other')">🚙 Other</div>
-
 </div>
 </div>
-
-
 
 <div class="section">
 <div class="title">What's the issue?</div>
 
 <div class="grid">
-
 <div class="card" onclick="selectProblem(this,'Battery')">🔋 Battery</div>
 <div class="card" onclick="selectProblem(this,'Puncture')">🛞 Puncture</div>
 <div class="card" onclick="selectProblem(this,'Fuel')">⛽ Fuel</div>
 <div class="card" onclick="selectProblem(this,'Not Starting')">⚙️ Not Starting</div>
 <div class="card" onclick="selectProblem(this,'Overheat')">🔥 Overheat</div>
 <div class="card" onclick="selectProblem(this,'Accident')">💥 Accident</div>
-
 </div>
 </div>
-
-
 
 <div class="section">
-
 <div class="title">Upload Vehicle Photo (optional)</div>
 
 <div class="upload" onclick="pickImage()">
@@ -137,22 +127,25 @@ Find nearby mechanic instantly
 </div>
 
 <img id="preview" class="preview" style="display:none"/>
-
 <input type="file" id="file" accept="image/*" style="display:none">
-
 </div>
-
-
 
 <div class="button" onclick="requestMechanic()">
 Request Mechanic
 </div>
 
+<!-- ✅ ROLE PROTECTION -->
+<script>
+let role = localStorage.getItem("role")
 
+if(role !== "customer"){
+location.href = "login.html"
+}
+</script>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 
 <script>
 
@@ -166,7 +159,6 @@ projectId: "mechzzy"
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
-
 let vehicle = ""
 let problem = ""
 let photo = ""
@@ -179,7 +171,6 @@ document.querySelectorAll(".grid")[0]
 
 el.classList.add("active")
 vehicle = val
-
 }
 
 function selectProblem(el,val){
@@ -190,10 +181,7 @@ document.querySelectorAll(".grid")[1]
 
 el.classList.add("active")
 problem = val
-
 }
-
-
 
 function pickImage(){
 document.getElementById("file").click()
@@ -213,13 +201,10 @@ reader.readAsDataURL(e.target.files[0])
 
 })
 
-
-
 navigator.geolocation.getCurrentPosition(pos=>{
 window.lat = pos.coords.latitude
 window.lng = pos.coords.longitude
 })
-
 
 function requestMechanic(){
 
@@ -238,7 +223,6 @@ let pin = Math.floor(1000 + Math.random()*9000)
 
 // save request
 db.ref("requests/"+id).set({
-
 vehicle:vehicle,
 problem:problem,
 photo:photo || "",
@@ -247,27 +231,23 @@ lng:window.lng,
 status:"pending",
 pin:pin,
 created:Date.now()
-
 })
 
-// save history (MOVE OUTSIDE)
+// save history
 let history =
 JSON.parse(localStorage.getItem("history") || "[]")
 
 history.push(id)
 
-localStorage.setItem(
-"history",
-JSON.stringify(history)
-)
+localStorage.setItem("history", JSON.stringify(history))
 
-// save for next screen
+// save locally
 localStorage.setItem("requestId", id)
 localStorage.setItem("pin", pin)
 localStorage.setItem("vehicle", vehicle)
 localStorage.setItem("issue", problem)
 
-// go to searching
+// go next
 window.location.href = "searching.html"
 
 }

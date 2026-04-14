@@ -12,35 +12,89 @@ font-family:Inter;
 padding:20px;
 }
 
+.card{
+background:#111;
+padding:16px;
+border-radius:12px;
+margin-top:20px;
+border:1px solid #222;
+}
+
+input{
+width:100%;
+padding:14px;
+margin-top:10px;
+background:#000;
+border:1px solid #333;
+color:white;
+border-radius:10px;
+}
+
 button{
 width:100%;
-padding:16px;
-margin-top:10px;
-background:#111;
-border:1px solid #222;
-color:white;
-border-radius:12px;
+padding:14px;
+margin-top:15px;
+background:white;
+color:black;
+border:none;
+border-radius:10px;
+font-weight:600;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Login as</h2>
+<h2>Welcome to Mechzzy</h2>
 
-<button onclick="customer()">Customer</button>
-<button onclick="mechanic()">Mechanic</button>
+<div class="card">
+
+<div>Select Role</div>
+
+<select id="role" style="width:100%;padding:12px;margin-top:10px;">
+<option value="customer">Customer</option>
+<option value="mechanic">Mechanic</option>
+</select>
+
+<input id="name" placeholder="Your name">
+<input id="phone" placeholder="Phone number">
+
+<button onclick="login()">Continue</button>
+
+</div>
 
 <script>
-function customer(){
-localStorage.setItem("role","customer")
-location.href="customer.html"
+
+function login(){
+
+let role = document.getElementById("role").value
+let name = document.getElementById("name").value
+let phone = document.getElementById("phone").value
+
+if(!name || !phone){
+alert("Enter all details")
+return
 }
 
-function mechanic(){
-localStorage.setItem("role","mechanic")
+// save
+localStorage.setItem("role", role)
+localStorage.setItem("name", name)
+localStorage.setItem("phone", phone)
+
+if(role=="mechanic"){
+localStorage.setItem("mechanicName", name)
+localStorage.setItem("mechanicPhone", phone)
+}
+
+// redirect
+if(role=="customer"){
+location.href="customer.html"
+}else{
 location.href="mechanic.html"
 }
+
+}
+
 </script>
 
 </body>

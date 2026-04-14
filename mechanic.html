@@ -76,6 +76,14 @@ Offline
 <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
 </audio>
 
+<!-- ✅ ROLE PROTECTION -->
+<script>
+if(localStorage.getItem("role") !== "mechanic"){
+location.href="login.html"
+}
+</script>
+
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -102,15 +110,16 @@ myLat = pos.coords.latitude
 myLng = pos.coords.longitude
 })
 
-let mechanicName =
-localStorage.getItem("mechanicName")
+// get mechanic info
+let mechanicName = localStorage.getItem("mechanicName")
+let mechanicPhone = localStorage.getItem("mechanicPhone")
 
-if(!mechanicName){
-mechanicName = prompt("Your name")
-localStorage.setItem("mechanicName",mechanicName)
+if(!mechanicName || !mechanicPhone){
+alert("Please login again")
+location.href="login.html"
 }
 
-// distance function
+// distance formula
 function distance(lat1, lon1, lat2, lon2){
 
 var R = 6371
@@ -157,8 +166,6 @@ if(!online) return
 
 requests.innerHTML=""
 
-let hasNew = false
-
 snap.forEach(child=>{
 
 let id = child.key
@@ -168,8 +175,6 @@ if(d.status!="pending") return
 if(!d.lat || !d.lng || !myLat || !myLng) return
 
 let dist = distance(myLat,myLng,d.lat,d.lng)
-
-hasNew = true
 
 requests.innerHTML+=`
 <div class="card">
@@ -187,11 +192,6 @@ Accept
 
 })
 
-// play sound if new request
-if(hasNew && requests.innerHTML==""){
-document.getElementById("sound").play()
-}
-
 if(requests.innerHTML==""){
 requests.innerHTML="<div class='card'>No requests</div>"
 }
@@ -201,8 +201,6 @@ requests.innerHTML="<div class='card'>No requests</div>"
 }
 
 function accept(id){
-
-let mechanicPhone = localStorage.getItem("mechanicPhone") || ""
 
 db.ref("requests/"+id).once("value",snap=>{
 
@@ -278,7 +276,7 @@ status:"completed"
 
 requests.innerHTML=`
 <div class="card">
-Service Completed
+Service Completed ✅
 </div>
 `
 
@@ -292,6 +290,7 @@ alert("Wrong PIN")
 
 </script>
 
+<!-- Bottom Nav -->
 <div style="
 position:fixed;
 bottom:0;

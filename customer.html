@@ -85,5 +85,13 @@ font-size:13px;
 </div>
 </div>
 
+<script>
+let role = localStorage.getItem("role")
+
+if(role !== "customer"){
+location.href = "login.html"
+}
+</script>
+
 </body>
 </html>
