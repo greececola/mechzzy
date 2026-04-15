@@ -106,6 +106,10 @@ Logout
 let name = localStorage.getItem("name") || "User"
 let phone = localStorage.getItem("phone") || "0000000000"
 
+if(!name || !phone){
+location.href="login.html"
+}
+
 document.getElementById("name").innerText = name
 document.getElementById("phone").innerText = phone
 

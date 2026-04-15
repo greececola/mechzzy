@@ -11,40 +11,18 @@ color:#fff;
 font-family:Inter;
 }
 
-/* smooth */
-*{transition:all 0.25s ease;}
-
 .header{
 padding:20px;
 font-size:22px;
-font-weight:600;
 border-bottom:1px solid #222;
 }
-
-.status{
-margin:15px;
-padding:14px;
-border-radius:12px;
-text-align:center;
-font-weight:600;
-cursor:pointer;
-}
-
-.online{background:#0f5132;}
-.offline{background:#333;}
 
 .card{
 background:#111;
 margin:15px;
 padding:18px;
-border-radius:16px;
+border-radius:14px;
 border:1px solid #222;
-}
-
-.title{
-color:#aaa;
-font-size:14px;
-margin-bottom:8px;
 }
 
 .btn{
@@ -74,74 +52,129 @@ margin-top:8px;
 
 <div class="header">Mechanic Dashboard</div>
 
-<div id="status" class="status"></div>
+<div id="requests"></div>
 
-<div class="card" id="jobBox" style="display:none">
-<div class="title">Current Job</div>
-<div>Heading to customer</div>
-<div class="btn" onclick="arrived()">Arrived</div>
-</div>
-
-<div class="card" id="pinBox" style="display:none">
-<div class="title">Enter Customer PIN</div>
-<input id="pin" class="input" placeholder="Enter PIN">
-<div class="btn" onclick="complete()">Complete Service</div>
-</div>
-
-<div class="card" id="doneBox" style="display:none">
-✅ Service Completed
-</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
 
 <script>
 
-// ROLE
-if(localStorage.getItem("role")!=="mechanic"){
-location.href="login.html"
+let mechanicName = localStorage.getItem("mechanicName")
+let mechanicPhone = localStorage.getItem("mechanicPhone")
+
+let currentId = null
+
+// 🔥 LISTEN REQUESTS
+db.ref("requests").on("value",snap=>{
+
+requests.innerHTML=""
+
+snap.forEach(child=>{
+
+let id = child.key
+let d = child.val()
+
+// SHOW PENDING
+if(d.status==="pending"){
+
+requests.innerHTML+=`
+<div class="card">
+<b>${d.vehicle}</b><br>
+Issue: ${d.problem}
+<div class="btn" onclick="accept('${id}')">Accept</div>
+</div>
+`
+
 }
 
-// DEFAULTS
-let online = localStorage.getItem("online") || "true"
-let job = localStorage.getItem("job") || "none"
+// SHOW ACCEPTED (THIS MECHANIC ONLY)
+if(d.status==="accepted" && d.mechanicName===mechanicName){
 
-localStorage.setItem("online",online)
-localStorage.setItem("job",job)
+currentId = id
 
-let status = document.getElementById("status")
+requests.innerHTML=`
+<div class="card">
+Heading to customer...
 
-// STATUS
-if(online==="true"){
-status.innerText="🟢 Online"
-status.classList.add("online")
-}else{
-status.innerText="⚫ Offline"
-status.classList.add("offline")
+<div class="btn" onclick="arrived()">Arrived</div>
+</div>
+`
+
 }
 
-// RESET
-jobBox.style.display="none"
-pinBox.style.display="none"
-doneBox.style.display="none"
+// SHOW ARRIVED
+if(d.status==="arrived" && d.mechanicName===mechanicName){
 
-// SHOW STATE
-if(job==="accepted") jobBox.style.display="block"
-if(job==="arrived") pinBox.style.display="block"
-if(job==="done") doneBox.style.display="block"
+currentId = id
 
-// ACTIONS
+requests.innerHTML=`
+<div class="card">
+Enter Customer PIN
+<input id="pin" class="input">
+
+<div class="btn" onclick="complete()">Complete</div>
+</div>
+`
+
+}
+
+// SHOW DONE
+if(d.status==="completed" && d.mechanicName===mechanicName){
+
+requests.innerHTML=`
+<div class="card">
+✅ Service Completed
+</div>
+`
+
+}
+
+})
+
+})
+
+// ACCEPT
+function accept(id){
+
+db.ref("requests/"+id).update({
+status:"accepted",
+mechanicName:mechanicName,
+mechanicPhone:mechanicPhone
+})
+
+}
+
+// ARRIVED
 function arrived(){
-localStorage.setItem("job","arrived")
-location.reload()
+
+db.ref("requests/"+currentId).update({
+status:"arrived"
+})
+
 }
 
+// COMPLETE
 function complete(){
-let pin=document.getElementById("pin").value
 
-if(pin==="9451"){
-localStorage.setItem("job","done")
-location.reload()
+let entered = document.getElementById("pin").value
+
+db.ref("requests/"+currentId).once("value",snap=>{
+
+let d = snap.val()
+
+if(entered == d.pin){
+
+db.ref("requests/"+currentId).update({
+status:"completed"
+})
+
 }else{
 alert("Wrong PIN")
 }
+
+})
+
 }
 
 </script>
