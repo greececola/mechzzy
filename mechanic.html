@@ -9,6 +9,7 @@ margin:0;
 background:#000;
 color:#fff;
 font-family:Inter;
+padding-bottom:70px;
 }
 
 .header{
@@ -17,12 +18,26 @@ font-size:22px;
 border-bottom:1px solid #222;
 }
 
+/* status toggle */
+.status{
+margin:15px;
+padding:14px;
+border-radius:12px;
+text-align:center;
+font-weight:600;
+cursor:pointer;
+}
+
+.online{background:#0f5132;}
+.offline{background:#333;}
+
 .card{
 background:#111;
 margin:15px;
 padding:18px;
 border-radius:14px;
 border:1px solid #222;
+animation:fade 0.3s ease;
 }
 
 .btn{
@@ -43,7 +58,36 @@ background:#000;
 border:1px solid #333;
 border-radius:10px;
 color:white;
-margin-top:8px;
+margin-top:10px;
+}
+
+/* bottom nav */
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+background:#000;
+border-top:1px solid #222;
+}
+
+.tab{
+flex:1;
+text-align:center;
+padding:12px;
+color:#777;
+font-size:13px;
+cursor:pointer;
+}
+
+.tab.active{
+color:#fff;
+}
+
+/* animation */
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
@@ -52,7 +96,15 @@ margin-top:8px;
 
 <div class="header">Mechanic Dashboard</div>
 
-<div id="requests"></div>
+<div id="status" class="status"></div>
+
+<div id="content"></div>
+
+<div class="bottom">
+<div class="tab active">Requests</div>
+<div class="tab" onclick="location='mechanic-activity.html'">Activity</div>
+<div class="tab" onclick="location='mechanic-account.html'">Account</div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -60,101 +112,144 @@ margin-top:8px;
 
 <script>
 
+// ROLE CHECK
+if(localStorage.getItem("role") !== "mechanic"){
+location.href="login.html"
+}
+
+// USER DATA
 let mechanicName = localStorage.getItem("mechanicName")
 let mechanicPhone = localStorage.getItem("mechanicPhone")
 
-let currentId = null
+// ONLINE STATE
+let online = localStorage.getItem("online") || "false"
+localStorage.setItem("online", online)
 
-// 🔥 LISTEN REQUESTS
+let statusBox = document.getElementById("status")
+
+function updateStatus(){
+if(online==="true"){
+statusBox.innerText="🟢 Online"
+statusBox.className="status online"
+}else{
+statusBox.innerText="⚫ Offline"
+statusBox.className="status offline"
+}
+}
+
+statusBox.onclick=()=>{
+online = (online==="true") ? "false" : "true"
+localStorage.setItem("online",online)
+updateStatus()
+}
+
+updateStatus()
+
+let currentId = null
+let content = document.getElementById("content")
+
+// 🔥 FIREBASE LISTENER
 db.ref("requests").on("value",snap=>{
 
-requests.innerHTML=""
+content.innerHTML=""
+
+let hasRequest = false
 
 snap.forEach(child=>{
 
 let id = child.key
 let d = child.val()
 
-// SHOW PENDING
+// SHOW ONLY WHEN ONLINE
+if(online !== "true") return
+
+// NEW REQUEST
 if(d.status==="pending"){
 
-requests.innerHTML+=`
+hasRequest = true
+
+content.innerHTML += `
 <div class="card">
 <b>${d.vehicle}</b><br>
 Issue: ${d.problem}
+
 <div class="btn" onclick="accept('${id}')">Accept</div>
 </div>
 `
-
 }
 
-// SHOW ACCEPTED (THIS MECHANIC ONLY)
+// ACCEPTED
 if(d.status==="accepted" && d.mechanicName===mechanicName){
 
+hasRequest = true
 currentId = id
 
-requests.innerHTML=`
+content.innerHTML = `
 <div class="card">
-Heading to customer...
+🚗 Heading to customer
 
 <div class="btn" onclick="arrived()">Arrived</div>
 </div>
 `
-
 }
 
-// SHOW ARRIVED
+// ARRIVED
 if(d.status==="arrived" && d.mechanicName===mechanicName){
 
+hasRequest = true
 currentId = id
 
-requests.innerHTML=`
+content.innerHTML = `
 <div class="card">
-Enter Customer PIN
+🔐 Enter Customer PIN
+
 <input id="pin" class="input">
 
-<div class="btn" onclick="complete()">Complete</div>
+<div class="btn" onclick="complete()">Complete Service</div>
 </div>
 `
-
 }
 
-// SHOW DONE
+// COMPLETED
 if(d.status==="completed" && d.mechanicName===mechanicName){
 
-requests.innerHTML=`
+hasRequest = true
+
+content.innerHTML = `
 <div class="card">
 ✅ Service Completed
 </div>
 `
-
 }
 
 })
 
+// EMPTY STATE
+if(!hasRequest){
+content.innerHTML = `
+<div class="card">
+No active requests
+</div>
+`
+}
+
 })
 
-// ACCEPT
+// ACTIONS
 function accept(id){
-
 db.ref("requests/"+id).update({
 status:"accepted",
 mechanicName:mechanicName,
 mechanicPhone:mechanicPhone
 })
-
 }
 
-// ARRIVED
 function arrived(){
-
 db.ref("requests/"+currentId).update({
 status:"arrived"
 })
-
 }
 
-// COMPLETE
 function complete(){
 
 let entered = document.getElementById("pin").value
@@ -164,11 +259,9 @@ db.ref("requests/"+currentId).once("value",snap=>{
 let d = snap.val()
 
 if(entered == d.pin){
-
 db.ref("requests/"+currentId).update({
 status:"completed"
 })
-
 }else{
 alert("Wrong PIN")
 }
