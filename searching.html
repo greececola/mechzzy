@@ -9,9 +9,10 @@
 body{
 background:black;
 color:white;
-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 margin:0;
 padding:0;
+line-height:1.5;
 }
 
 .container{
@@ -19,14 +20,17 @@ padding:20px;
 }
 
 .title{
-font-size:22px;
+font-size:15px;
 font-weight:600;
-margin-top:20px;
+margin-top:22px;
+margin-bottom:8px;
+color:#aaa;
 }
 
 .sub{
-color:gray;
+color:#777;
 margin-top:5px;
+font-size:13px;
 }
 
 .loader{
@@ -39,17 +43,55 @@ animation:spin 1s linear infinite;
 margin:40px auto;
 }
 
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
+.card{
+background: linear-gradient(145deg, #111, #0a0a0a);
+margin:15px;
+padding:18px;
+border-radius:16px;
+
+/* subtle border */
+border:1px solid #1f1f1f;
+
+/* premium depth */
+box-shadow: 
+0 4px 20px rgba(0,0,0,0.6),
+inset 0 0 0 1px rgba(255,255,255,0.02);
+
 }
 
-.card{
-background:#111;
-padding:16px;
-border-radius:14px;
-margin-top:20px;
-border:1px solid #222;
+/* slight lift on hover/touch */
+.card:active{
+transform: scale(0.98);
+}
+
+/* animation */
+/* Smooth feel */
+*{
+transition: all 0.25s ease;
+}
+
+/* Fade animation */
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Spin loader */
+@keyframes spin{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+}
+
+
+/* slight lift on hover/touch */
+.card:active{
+transform: scale(0.98);
 }
 
 .label{
@@ -60,17 +102,30 @@ font-size:13px;
 .value{
 margin-top:4px;
 font-size:16px;
+font-weight:500;
 }
 
 .bottom{
 position:fixed;
 bottom:0;
-left:0;
-right:0;
-background:#111;
-padding:20px;
+width:100%;
+display:flex;
+background:#000;
+border-top:1px solid #1a1a1a;
+}
+
+.tab{
+flex:1;
 text-align:center;
-border-top:1px solid #222;
+padding:12px;
+color:#777;
+font-size:13px;
+cursor:pointer;
+}
+
+.tab.active{
+color:#fff;
+font-weight:600;
 }
 
 .pin{
@@ -78,6 +133,25 @@ font-size:28px;
 letter-spacing:8px;
 margin-top:10px;
 }
+
+.header{
+padding:20px;
+font-size:22px;
+font-weight:600;
+letter-spacing:0.5px;
+border-bottom:1px solid #1a1a1a;
+background:#000;
+position:sticky;
+top:0;
+z-index:10;
+}
+
+/* spacing improvement */
+.section{
+margin-top:22px;
+}
+
+
 </style>
 </head>
 
@@ -107,7 +181,7 @@ margin-top:10px;
 
 </div>
 
-<div class="bottom">
+<div class="card" style="text-align:center;margin:15px">
 Share PIN with mechanic
 <div class="pin" id="pin">----</div>
 </div>

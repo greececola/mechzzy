@@ -8,14 +8,23 @@ body{
 margin:0;
 background:#000;
 color:#fff;
-font-family:Inter;
+font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 padding-bottom:70px;
+line-height:1.5;
 }
 
 .header{
 padding:20px;
 font-size:22px;
-border-bottom:1px solid #222;
+font-weight:600;
+letter-spacing:0.5px;
+border-bottom:1px solid #1a1a1a;
+
+/* optional */
+background:#000;
+position:sticky;
+top:0;
+z-index:10;
 }
 
 /* status toggle */
@@ -32,12 +41,24 @@ cursor:pointer;
 .offline{background:#333;}
 
 .card{
-background:#111;
+background: linear-gradient(145deg, #111, #0a0a0a);
 margin:15px;
 padding:18px;
-border-radius:14px;
-border:1px solid #222;
-animation:fade 0.3s ease;
+border-radius:16px;
+
+/* subtle border */
+border:1px solid #1f1f1f;
+
+/* premium depth */
+box-shadow: 
+0 4px 20px rgba(0,0,0,0.6),
+inset 0 0 0 1px rgba(255,255,255,0.02);
+
+}
+
+/* slight lift on hover/touch */
+.card:active{
+transform: scale(0.98);
 }
 
 .btn{
@@ -46,9 +67,37 @@ color:black;
 padding:12px;
 border-radius:10px;
 text-align:center;
-margin-top:12px;
 font-weight:600;
 cursor:pointer;
+
+/* NEW */
+/* Smooth feel */
+*{
+transition: all 0.25s ease;
+}
+
+/* Fade animation */
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Spin loader */
+@keyframes spin{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+}
+}
+
+.btn:active{
+transform: scale(0.95);
+opacity:0.85;
 }
 
 .input{
@@ -68,7 +117,7 @@ bottom:0;
 width:100%;
 display:flex;
 background:#000;
-border-top:1px solid #222;
+border-top:1px solid #1a1a1a;
 }
 
 .tab{
@@ -82,17 +131,38 @@ cursor:pointer;
 
 .tab.active{
 color:#fff;
+font-weight:600;
+}
+/* section titles */
+.title{
+font-size:15px;
+color:#aaa;
+margin-bottom:8px;
 }
 
-/* animation */
-@keyframes fade{
-from{opacity:0; transform:translateY(10px);}
-to{opacity:1; transform:translateY(0);}
+/* main text */
+.value{
+font-size:16px;
+font-weight:500;
 }
+
+/* small text */
+.sub{
+font-size:13px;
+color:#777;
+}
+
+/* spacing improvement */
+.section{
+margin-top:22px;
+}
+
 </style>
 </head>
 
 <body>
+
+    <audio id="newRequestSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
 
 <div class="header">Mechanic Dashboard</div>
 
@@ -166,6 +236,15 @@ if(online !== "true") return
 // NEW REQUEST
 if(d.status==="pending"){
 
+// 🔔 play sound once
+if(!window.soundPlayed){
+let sound = document.getElementById("newRequestSound")
+if(sound){
+sound.play().catch(()=>{})
+}
+window.soundPlayed = true
+}
+
 hasRequest = true
 
 content.innerHTML += `
@@ -186,7 +265,13 @@ currentId = id
 
 content.innerHTML = `
 <div class="card">
+<div style="font-size:16px;font-weight:600;margin-bottom:6px;">
 🚗 Heading to customer
+</div>
+
+<div style="color:#aaa;font-size:14px;">
+Follow route & reach safely
+</div>
 
 <div class="btn" onclick="arrived()">Arrived</div>
 </div>
@@ -227,8 +312,16 @@ content.innerHTML = `
 // EMPTY STATE
 if(!hasRequest){
 content.innerHTML = `
-<div class="card">
-No active requests
+<div class="card fade" style="text-align:center">
+
+<div style="font-size:16px;margin-bottom:6px">
+No requests nearby
+</div>
+
+<div style="color:#777;font-size:13px">
+Stay online to receive jobs
+</div>
+
 </div>
 `
 }
@@ -271,6 +364,8 @@ alert("Wrong PIN")
 }
 
 </script>
+
+<audio id="acceptSound" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
 </body>
 </html>

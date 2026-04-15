@@ -8,38 +8,78 @@ body{
 margin:0;
 background:#000;
 color:#fff;
-font-family:Inter;
+font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+padding-bottom:70px;
+line-height:1.5;
 }
 
-/* smooth feel */
+/* Smooth feel */
 *{
-transition:all 0.25s ease;
+transition: all 0.25s ease;
+}
+
+/* Fade animation */
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Spin loader */
+@keyframes spin{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
 }
 
 .header{
-padding:18px;
-font-size:20px;
-border-bottom:1px solid #222;
+padding:20px;
+font-size:22px;
+font-weight:600;
+letter-spacing:0.5px;
+border-bottom:1px solid #1a1a1a;
+background:#000;
+position:sticky;
+top:0;
+z-index:10;
 }
 
 /* cards */
 .card{
-background:#111;
-margin:12px;
-padding:16px;
-border-radius:14px;
-border:1px solid #222;
-animation:fade 0.4s ease;
+background: linear-gradient(145deg, #111, #0a0a0a);
+margin:15px;
+padding:18px;
+border-radius:16px;
+
+/* subtle border */
+border:1px solid #1f1f1f;
+
+/* premium depth */
+box-shadow: 
+0 4px 20px rgba(0,0,0,0.6),
+inset 0 0 0 1px rgba(255,255,255,0.02);
+
+}
+
+/* slight lift on hover/touch */
+.card:active{
+transform: scale(0.98);
 }
 
 .title{
-font-size:16px;
+font-size:15px;
 font-weight:600;
+color:#aaa;
+margin-bottom:8px;
 }
 
 .sub{
-color:#aaa;
-font-size:14px;
+font-size:13px;
+color:#777;
 margin-top:4px;
 }
 
@@ -49,10 +89,38 @@ font-size:13px;
 color:#0f5132;
 }
 
-/* animation */
-@keyframes fade{
-from{opacity:0; transform:translateY(10px);}
-to{opacity:1; transform:translateY(0);}
+/* main text */
+.value{
+font-size:16px;
+font-weight:500;
+}
+
+/* spacing improvement */
+.section{
+margin-top:22px;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+background:#000;
+border-top:1px solid #1a1a1a;
+}
+
+.tab{
+flex:1;
+text-align:center;
+padding:12px;
+color:#777;
+font-size:13px;
+cursor:pointer;
+}
+
+.tab.active{
+color:#fff;
+font-weight:600;
 }
 
 </style>
@@ -99,7 +167,19 @@ Issue: ${d.problem}
 })
 
 if(list.innerHTML==""){
-list.innerHTML="<div class='card'>No activity</div>"
+list.innerHTML=`
+<div class="card fade" style="text-align:center">
+
+<div style="font-size:16px;margin-bottom:6px">
+No completed jobs
+</div>
+
+<div style="color:#777;font-size:13px">
+Your completed services will appear here
+</div>
+
+</div>
+`
 }
 
 })
