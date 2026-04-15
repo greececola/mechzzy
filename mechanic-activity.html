@@ -11,25 +11,50 @@ color:#fff;
 font-family:Inter;
 }
 
+/* smooth feel */
+*{
+transition:all 0.25s ease;
+}
+
 .header{
 padding:18px;
 font-size:20px;
 border-bottom:1px solid #222;
 }
 
+/* cards */
 .card{
 background:#111;
 margin:12px;
 padding:16px;
-border-radius:12px;
+border-radius:14px;
 border:1px solid #222;
+animation:fade 0.4s ease;
+}
+
+.title{
+font-size:16px;
+font-weight:600;
+}
+
+.sub{
+color:#aaa;
+font-size:14px;
+margin-top:4px;
 }
 
 .status{
-color:#aaa;
+margin-top:10px;
 font-size:13px;
-margin-top:6px;
+color:#0f5132;
 }
+
+/* animation */
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
 </style>
 </head>
 
@@ -40,18 +65,24 @@ margin-top:6px;
 <div id="list"></div>
 
 <script>
+
+//////////////////////////////
+// ROLE PROTECTION
+//////////////////////////////
 let role = localStorage.getItem("role")
 
 if(role !== "mechanic"){
 location.href = "login.html"
 }
-</script>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+//////////////////////////////
+// GET LIST ELEMENT ✅
+//////////////////////////////
+let list = document.getElementById("list")
 
-<script>
-
+//////////////////////////////
+// FIREBASE
+//////////////////////////////
 var firebaseConfig = {
 apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
 authDomain: "mechzzy.firebaseapp.com",
@@ -62,9 +93,14 @@ projectId: "mechzzy"
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
-let mechanicName =
-localStorage.getItem("mechanicName")
+//////////////////////////////
+// GET MECHANIC NAME (SAFE)
+//////////////////////////////
+let mechanicName = localStorage.getItem("name") // FIXED
 
+//////////////////////////////
+// LOAD DATA
+//////////////////////////////
 db.ref("requests").on("value",snap=>{
 
 list.innerHTML=""
@@ -80,11 +116,11 @@ list.innerHTML+=`
 
 <div class="card">
 
-<b>${d.vehicle}</b><br>
-Issue: ${d.problem}
+<div class="title">${d.vehicle}</div>
+<div class="sub">Issue: ${d.problem}</div>
 
 <div class="status">
-Completed
+✅ Completed
 </div>
 
 </div>
@@ -93,13 +129,19 @@ Completed
 
 })
 
+//////////////////////////////
+// EMPTY STATE
+//////////////////////////////
 if(list.innerHTML==""){
-list.innerHTML="<div class='card'>No activity</div>"
+list.innerHTML="<div class='card'>No activity yet</div>"
 }
 
 })
 
 </script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 </body>
 </html>

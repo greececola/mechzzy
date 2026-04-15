@@ -103,15 +103,61 @@ Logout
 
 <script>
 
-document.getElementById("name").innerText =
-localStorage.getItem("name") || "User"
+let online = localStorage.getItem("online")
+let job = localStorage.getItem("job")
 
-document.getElementById("phone").innerText =
-localStorage.getItem("phone") || "Not set"
+// FIX: default values
+if(!online){
+online = "false"
+localStorage.setItem("online","false")
+}
 
-function logout(){
-localStorage.clear()
-location.href="index.html"
+if(!job){
+job = "none"
+localStorage.setItem("job","none")
+}
+
+let statusBox = document.getElementById("status")
+
+if(online==="true"){
+statusBox.innerText="Online"
+}else{
+statusBox.innerText="Offline"
+}
+
+// RESET UI
+document.getElementById("jobBox").style.display="none"
+document.getElementById("pinBox").style.display="none"
+document.getElementById("doneBox").style.display="none"
+
+// SHOW BASED ON STATE
+if(job==="accepted"){
+document.getElementById("jobBox").style.display="block"
+}
+
+if(job==="arrived"){
+document.getElementById("pinBox").style.display="block"
+}
+
+if(job==="done"){
+document.getElementById("doneBox").style.display="block"
+}
+
+// ACTIONS
+function arrived(){
+localStorage.setItem("job","arrived")
+location.reload()
+}
+
+function complete(){
+let pin=document.getElementById("pin").value
+
+if(pin==="9451"){
+localStorage.setItem("job","done")
+location.reload()
+}else{
+alert("Wrong PIN")
+}
 }
 
 </script>

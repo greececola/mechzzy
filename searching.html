@@ -168,16 +168,22 @@ db.ref("requests/"+id).on("value",(snap)=>{
 let r = snap.val()
 if(!r) return
 
-if(r.status=="accepted" || r.status=="arrived"){
+// 🔴 STILL SEARCHING
+if(r.status == "pending"){
+// nothing
+}
+
+// 🟢 ACCEPTED
+if(r.status == "accepted"){
 
 localStorage.setItem("mechanicName", r.mechanicName)
+localStorage.setItem("mechanicPhone", r.mechanicPhone)
 
-window.location.href="assigned.html"
+window.location.href = "assigned.html"
 
 }
 
 })
-
 // cancel request
 function cancel(){
 
