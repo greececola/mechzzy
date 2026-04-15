@@ -11,10 +11,8 @@ color:#fff;
 font-family:Inter;
 }
 
-/* Smooth UI */
-*{
-transition:all 0.25s ease;
-}
+/* smooth */
+*{transition:all 0.25s ease;}
 
 .header{
 padding:20px;
@@ -23,11 +21,10 @@ font-weight:600;
 border-bottom:1px solid #222;
 }
 
-/* Status */
 .status{
 margin:15px;
 padding:14px;
-border-radius:10px;
+border-radius:12px;
 text-align:center;
 font-weight:600;
 cursor:pointer;
@@ -36,19 +33,17 @@ cursor:pointer;
 .online{background:#0f5132;}
 .offline{background:#333;}
 
-/* Cards */
 .card{
 background:#111;
 margin:15px;
 padding:18px;
-border-radius:14px;
+border-radius:16px;
 border:1px solid #222;
-animation:fade 0.4s ease;
 }
 
 .title{
-font-size:14px;
 color:#aaa;
+font-size:14px;
 margin-bottom:8px;
 }
 
@@ -56,15 +51,11 @@ margin-bottom:8px;
 background:white;
 color:black;
 padding:12px;
-border-radius:8px;
+border-radius:10px;
 text-align:center;
 margin-top:12px;
 font-weight:600;
 cursor:pointer;
-}
-
-.btn:active{
-transform:scale(0.96);
 }
 
 .input{
@@ -72,17 +63,10 @@ width:100%;
 padding:12px;
 background:#000;
 border:1px solid #333;
-border-radius:8px;
+border-radius:10px;
 color:white;
 margin-top:8px;
 }
-
-/* Animation */
-@keyframes fade{
-from{opacity:0; transform:translateY(10px);}
-to{opacity:1; transform:translateY(0);}
-}
-
 </style>
 </head>
 
@@ -90,16 +74,16 @@ to{opacity:1; transform:translateY(0);}
 
 <div class="header">Mechanic Dashboard</div>
 
-<div id="status" class="status">Checking...</div>
+<div id="status" class="status"></div>
 
 <div class="card" id="jobBox" style="display:none">
-<div class="title">🚗 Current Job</div>
+<div class="title">Current Job</div>
 <div>Heading to customer</div>
 <div class="btn" onclick="arrived()">Arrived</div>
 </div>
 
 <div class="card" id="pinBox" style="display:none">
-<div class="title">🔐 Verify Customer</div>
+<div class="title">Enter Customer PIN</div>
 <input id="pin" class="input" placeholder="Enter PIN">
 <div class="btn" onclick="complete()">Complete Service</div>
 </div>
@@ -110,196 +94,54 @@ to{opacity:1; transform:translateY(0);}
 
 <script>
 
-//////////////////////////////
-// ROLE PROTECTION
-//////////////////////////////
-if(localStorage.getItem("role") !== "mechanic"){
+// ROLE
+if(localStorage.getItem("role")!=="mechanic"){
 location.href="login.html"
 }
 
-//////////////////////////////
-// FIREBASE
-//////////////////////////////
-var firebaseConfig = {
-apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
-authDomain: "mechzzy.firebaseapp.com",
-databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId: "mechzzy"
-};
+// DEFAULTS
+let online = localStorage.getItem("online") || "true"
+let job = localStorage.getItem("job") || "none"
 
-firebase.initializeApp(firebaseConfig);
-var db = firebase.database();
+localStorage.setItem("online",online)
+localStorage.setItem("job",job)
 
-//////////////////////////////
-// STATE
-//////////////////////////////
-let online = false
-let currentRequestId = null
+let status = document.getElementById("status")
 
-let mechanicName = localStorage.getItem("mechanicName")
-let mechanicPhone = localStorage.getItem("mechanicPhone")
-
-let statusBox = document.getElementById("status")
-
-//////////////////////////////
-// TOGGLE ONLINE
-//////////////////////////////
-statusBox.onclick = function(){
-
-online = !online
-
-if(online){
-statusBox.innerText = "🟢 Online"
-listenRequests()
+// STATUS
+if(online==="true"){
+status.innerText="🟢 Online"
+status.classList.add("online")
 }else{
-statusBox.innerText = "⚫ Offline"
-stopListening()
-clearUI()
+status.innerText="⚫ Offline"
+status.classList.add("offline")
 }
 
-}
+// RESET
+jobBox.style.display="none"
+pinBox.style.display="none"
+doneBox.style.display="none"
 
-//////////////////////////////
-// LISTEN TO REQUESTS
-//////////////////////////////
-let listener = null
+// SHOW STATE
+if(job==="accepted") jobBox.style.display="block"
+if(job==="arrived") pinBox.style.display="block"
+if(job==="done") doneBox.style.display="block"
 
-function listenRequests(){
-
-listener = db.ref("requests").on("value",snap=>{
-
-clearUI()
-
-snap.forEach(child=>{
-
-let id = child.key
-let d = child.val()
-
-if(d.status !== "pending") return
-
-showRequest(id, d)
-
-})
-
-})
-
-}
-
-function stopListening(){
-if(listener){
-db.ref("requests").off("value", listener)
-}
-}
-
-//////////////////////////////
-// SHOW REQUEST
-//////////////////////////////
-function showRequest(id, d){
-
-document.getElementById("jobBox").style.display = "block"
-
-document.getElementById("jobBox").innerHTML = `
-<div class="title">🚗 ${d.vehicle}</div>
-<div>Issue: ${d.problem}</div>
-
-<div class="btn" onclick="accept('${id}')">
-Accept Request
-</div>
-`
-
-}
-
-//////////////////////////////
-// ACCEPT REQUEST
-//////////////////////////////
-function accept(id){
-
-db.ref("requests/"+id).once("value",snap=>{
-
-let data = snap.val()
-
-if(data.status != "pending"){
-alert("Already taken")
-return
-}
-
-db.ref("requests/"+id).update({
-status:"accepted",
-mechanicName: localStorage.getItem("mechanicName"),
-mechanicPhone: localStorage.getItem("mechanicPhone"),
-mechLat: myLat,
-mechLng: myLng
-})
-
-// save current job
-localStorage.setItem("currentJob", id)
-
-// show UI
-requests.innerHTML = `
-<div class="card">
-🚗 Heading to customer
-
-<br><br>
-
-<button onclick="arrived('${id}')">
-Arrived
-</button>
-
-</div>
-`
-
-})
-
-}
-//////////////////////////////
-// ARRIVED
-//////////////////////////////
+// ACTIONS
 function arrived(){
-
-db.ref("requests/"+currentRequestId).update({
-status:"arrived"
-})
-
-document.getElementById("jobBox").style.display="none"
-document.getElementById("pinBox").style.display="block"
-
+localStorage.setItem("job","arrived")
+location.reload()
 }
 
-//////////////////////////////
-// COMPLETE
-//////////////////////////////
 function complete(){
+let pin=document.getElementById("pin").value
 
-let entered = document.getElementById("pin").value
-
-db.ref("requests/"+currentRequestId).once("value",snap=>{
-
-let data = snap.val()
-
-if(entered == data.pin){
-
-db.ref("requests/"+currentRequestId).update({
-status:"completed"
-})
-
-document.getElementById("pinBox").style.display="none"
-document.getElementById("doneBox").style.display="block"
-
+if(pin==="9451"){
+localStorage.setItem("job","done")
+location.reload()
 }else{
 alert("Wrong PIN")
 }
-
-})
-
-}
-
-//////////////////////////////
-// CLEAR UI
-//////////////////////////////
-function clearUI(){
-document.getElementById("jobBox").style.display="none"
-document.getElementById("pinBox").style.display="none"
-document.getElementById("doneBox").style.display="none"
 }
 
 </script>

@@ -90,10 +90,10 @@ font-weight:600;
 
 <div class="card">
 
-<div class="option">📜 My Requests</div>
-<div class="option">💳 Payments</div>
-<div class="option">📞 Help & Support</div>
-<div class="option">⚙️ Settings</div>
+<div class="option" onclick="location.href='customer-activity.html'">📜 My Requests</div>
+<div class="option" onclick="alert('Coming soon')">💳 Payments</div>
+<div class="option" onclick="alert('Support: mechzzy@gmail.com')">📞 Help & Support</div>
+<div class="option" onclick="alert('Settings soon')">⚙️ Settings</div>
 
 </div>
 
@@ -103,61 +103,15 @@ Logout
 
 <script>
 
-let online = localStorage.getItem("online")
-let job = localStorage.getItem("job")
+let name = localStorage.getItem("name") || "User"
+let phone = localStorage.getItem("phone") || "0000000000"
 
-// FIX: default values
-if(!online){
-online = "false"
-localStorage.setItem("online","false")
-}
+document.getElementById("name").innerText = name
+document.getElementById("phone").innerText = phone
 
-if(!job){
-job = "none"
-localStorage.setItem("job","none")
-}
-
-let statusBox = document.getElementById("status")
-
-if(online==="true"){
-statusBox.innerText="Online"
-}else{
-statusBox.innerText="Offline"
-}
-
-// RESET UI
-document.getElementById("jobBox").style.display="none"
-document.getElementById("pinBox").style.display="none"
-document.getElementById("doneBox").style.display="none"
-
-// SHOW BASED ON STATE
-if(job==="accepted"){
-document.getElementById("jobBox").style.display="block"
-}
-
-if(job==="arrived"){
-document.getElementById("pinBox").style.display="block"
-}
-
-if(job==="done"){
-document.getElementById("doneBox").style.display="block"
-}
-
-// ACTIONS
-function arrived(){
-localStorage.setItem("job","arrived")
-location.reload()
-}
-
-function complete(){
-let pin=document.getElementById("pin").value
-
-if(pin==="9451"){
-localStorage.setItem("job","done")
-location.reload()
-}else{
-alert("Wrong PIN")
-}
+function logout(){
+localStorage.clear()
+location.href = "login.html"
 }
 
 </script>

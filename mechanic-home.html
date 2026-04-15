@@ -65,11 +65,6 @@ padding:12px;
 
 let mechanicName = localStorage.getItem("mechanicName")
 
-if(!mechanicName){
-mechanicName = prompt("Your name")
-localStorage.setItem("mechanicName",mechanicName)
-}
-
 db.ref("requests").on("value",snap=>{
 
 requests.innerHTML=""
@@ -83,46 +78,30 @@ if(d.status!="pending") return
 
 requests.innerHTML+=`
 <div class="card">
-
 <b>${d.vehicle}</b><br>
-Issue: ${d.problem}<br>
-
-<button onclick="accept('${id}')">
-Accept Request
-</button>
-
+Issue: ${d.problem}
+<button onclick="accept('${id}')">Accept</button>
 </div>
 `
-
 })
 
 })
 
 function accept(id){
 
+localStorage.setItem("job","accepted")
+
 db.ref("requests/"+id).update({
 status:"accepted",
 mechanicName:mechanicName,
-eta:"8 min"
+mechanicPhone:localStorage.getItem("mechanicPhone")
 })
 
-// show heading screen
-requests.innerHTML=`
-<div class="card">
-
-Heading to customer...
-
-<br><br>
-
-Ask customer for PIN to complete
-
-</div>
-`
+location.href="mechanic.html"
 
 }
 
 </script>
-
 <div class="bottom">
 <div class="tab">Requests</div>
 <div class="tab">Activity</div>
