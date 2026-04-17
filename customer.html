@@ -141,6 +141,30 @@ color:#777;
 margin-top:22px;
 }
 
+/* 🔥 UNIVERSAL CLICK FEEDBACK */
+
+button, .card, .option, .tab, .btn {
+transition: all 0.15s ease;
+cursor: pointer;
+}
+
+/* TAP EFFECT */
+button:active, 
+.card:active, 
+.option:active, 
+.tab:active, 
+.btn:active {
+transform: scale(0.96);
+opacity: 0.85;
+}
+
+/* HOVER (for laptop) */
+button:hover, 
+.card:hover, 
+.option:hover {
+background:#1a1a1a;
+}
+
 </style>
 </head>
 
