@@ -120,28 +120,79 @@ margin-top:22px;
 
 <body>
 
-<div class="header">Mechzzy</div>
+<div class="header">MECHZZY</div>
 
-<div class="card" onclick="emergency()">
-🚨 Emergency Help
+<div class="card">
+🚨 Get Mechanic in Minutes
 </div>
 
 <div class="card">
-📅 Schedule Service
+Select Vehicle<br><br>
+
+<button onclick="selectVehicle('Car')">Car</button>
+<button onclick="selectVehicle('Bike')">Bike</button>
+<button onclick="selectVehicle('Scooty')">Scooty</button>
+<button onclick="selectVehicle('Other')">Other</button>
 </div>
+
+<div class="card">
+Select Problem<br><br>
+
+<button onclick="selectProblem('Fuel')">Fuel</button>
+<button onclick="selectProblem('Puncture')">Puncture</button>
+<button onclick="selectProblem('Battery')">Battery</button>
+<button onclick="selectProblem('Accident')">Accident</button>
+<button onclick="selectProblem('Other')">Other</button>
+</div>
+
+<button onclick="request()">FIND MECHANIC NOW</button>
+
+<script src="firebase.js"></script>
 
 <script>
-function emergency(){
-location="emergency.html"
-}
-</script>
 
-<div class="bottom">
-<div class="tab">Home</div>
-<div class="tab" onclick="location='customer-services.html'">Services</div>
-<div class="tab" onclick="location='customer-activity.html'">Activity</div>
-<div class="tab" onclick="location='customer-account.html'">Account</div>
-</div>
+let vehicle=""
+let problem=""
+
+function selectVehicle(v){ vehicle=v }
+function selectProblem(p){ problem=p }
+
+navigator.geolocation.getCurrentPosition(pos=>{
+window.lat = pos.coords.latitude
+window.lng = pos.coords.longitude
+})
+
+function request(){
+
+if(!vehicle || !problem){
+alert("Select all")
+return
+}
+
+let id = Date.now()
+let pin = Math.floor(1000 + Math.random()*9000)
+
+db.ref("requests/"+id).set({
+vehicle:vehicle,
+problem:problem,
+lat:window.lat,
+lng:window.lng,
+status:"pending",
+pin:pin,
+mechanicName:"",
+mechanicPhone:""
+})
+
+localStorage.setItem("requestId",id)
+localStorage.setItem("pin",pin)
+localStorage.setItem("vehicle",vehicle)
+localStorage.setItem("issue",problem)
+
+location.href="searching.html"
+
+}
+
+</script>
 
 </body>
 </html>

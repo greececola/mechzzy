@@ -149,7 +149,6 @@ margin-top:22px;
 </div>
 
 <script>
-
 function login(){
 
 let role = document.getElementById("role").value
@@ -161,7 +160,6 @@ alert("Enter all details")
 return
 }
 
-// save
 localStorage.setItem("role", role)
 localStorage.setItem("name", name)
 localStorage.setItem("phone", phone)
@@ -169,17 +167,12 @@ localStorage.setItem("phone", phone)
 if(role=="mechanic"){
 localStorage.setItem("mechanicName", name)
 localStorage.setItem("mechanicPhone", phone)
-}
-
-// redirect
-if(role=="customer"){
-location.href="customer.html"
+location.href="mechanic-home.html"
 }else{
-location.href="mechanic.html"
+location.href="customer-home.html"
 }
 
 }
-
 </script>
 
 </body>
