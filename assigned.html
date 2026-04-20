@@ -2,142 +2,75 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Mechanic Assigned</title>
 
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+<style>
 body{
 margin:0;
 background:#000;
 color:#fff;
-font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-line-height:1.5;
+font-family:'Inter', sans-serif;
 }
 
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
-}
-
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* Spin loader */
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
-
-/* Header */
+/* HEADER */
 .header{
-padding:20px;
-font-size:22px;
-font-weight:600;
-border-bottom:1px solid #1a1a1a;
-letter-spacing:0.5px;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
-}
-
-/* Cards */
-.card{
-background: linear-gradient(145deg, #111, #0a0a0a);
-margin:15px;
 padding:18px;
-border-radius:16px;
-
-/* subtle border */
-border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
-}
-
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
-}
-
-/* Buttons */
-.btn{
-background:#fff;
-color:#000;
-padding:14px;
-border-radius:12px;
-text-align:center;
+border-bottom:1px solid #1a1a1a;
+font-size:18px;
 font-weight:600;
-cursor:pointer;
 }
 
-.btn:active{
-transform:scale(0.96);
+/* MAP */
+#map{
+height:250px;
 }
 
-/* Options (vehicle + issue) */
-.option{
-background:#111;
-border:1px solid #1a1a1a;
-border-radius:14px;
-padding:16px;
+/* STATUS */
+.status-box{
+padding:20px;
 text-align:center;
+}
+
+.status-title{
+font-size:20px;
+font-weight:600;
+}
+
+.status-sub{
+font-size:13px;
+color:#888;
+}
+
+.eta{
+margin-top:10px;
 font-size:15px;
 }
 
-.option:hover{
-background:#1a1a1a;
-transform:scale(1.02);
-}
-
-/* Input */
-.input{
-width:100%;
-padding:12px;
-background:#000;
-border:1px solid #333;
-border-radius:10px;
-color:white;
-}
-
-.icon{
-margin-right:8px;
-opacity:0.8;
-}
-
-.fade{
-animation:fade 0.5s ease;
-}
-
-.loader{
-width:36px;
-height:36px;
-border:3px solid #222;
-border-top:3px solid #fff;
-border-radius:50%;
-animation:spin 0.8s linear infinite;
-margin:auto;
-}
-
-.status{
-margin:15px;
-padding:12px;
-border-radius:10px;
-text-align:center;
+/* CARD */
+.card{
 background:#111;
+margin:15px;
+padding:16px;
+border-radius:14px;
 border:1px solid #222;
+}
+
+/* BUTTON */
+.btn{
+margin-top:10px;
+padding:14px;
+background:#fff;
+color:#000;
+border-radius:12px;
+text-align:center;
+font-weight:600;
+}
+
+.btn.secondary{
+background:#222;
+color:#fff;
 }
 
 .bottom{
@@ -154,164 +87,51 @@ flex:1;
 text-align:center;
 padding:12px;
 color:#777;
-font-size:13px;
-cursor:pointer;
+font-size:12px;
 }
 
 .tab.active{
 color:#fff;
-font-weight:600;
 }
-
-/* section titles */
-.title{
-font-size:15px;
-color:#aaa;
-margin-bottom:8px;
-}
-
-/* main text */
-.value{
-font-size:16px;
-font-weight:500;
-}
-
-/* small text */
-.sub{
-font-size:13px;
-color:#777;
-}
-
-/* spacing improvement */
-.section{
-margin-top:22px;
-}
-
-.panel{
-background:#000;
-padding:20px;
-border-top-left-radius:20px;
-border-top-right-radius:20px;
-margin-top:-20px;
-box-shadow:0 -5px 20px rgba(0,0,0,0.6);
-}
-
-.eta{
-font-size:20px;
-font-weight:600;
-margin-bottom:10px;
-}
-
-.pinbox{
-background:#111;
-padding:14px;
-border-radius:12px;
-margin-top:10px;
-text-align:center;
-letter-spacing:6px;
-font-size:22px;
-border:1px solid #222;
-}
-
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 </head>
 
 <body>
 
-<div class="map" id="mapText">
-Finding mechanic...
-</div>
+<div class="header">Mechanic Assigned</div>
 
-<div class="panel">
+<div id="map"></div>
 
-<div class="eta" id="eta">
-Connecting...
-</div>
-
-<div class="pinbox" id="pin">
-0000
+<div class="status-box">
+<div class="status-title" id="statusTitle">Connecting...</div>
+<div class="status-sub" id="statusSub">Please wait</div>
+<div class="eta" id="eta">--</div>
 </div>
 
 <div class="card">
-
-<div>
-<div class="name" id="mechName">Mechanic</div>
-<div class="rating">⭐ 4.7</div>
+<b id="mechName">Mechanic</b><br>
+⭐ 4.7 • Nearby expert
 </div>
 
-<div>
-Bike Mechanic
-</div>
-
-</div>
-
-<div class="btns">
-<button class="btn" onclick="call()">📞 Call</button>
-<button class="btn">💬 Message</button>
-</div>
-
-<div class="issue">
+<div class="card">
 Issue: <span id="issue"></span>
 </div>
 
+<div class="card">
+<div class="btn" onclick="call()">📞 Call Mechanic</div>
+<div class="btn secondary">💬 Message</div>
 </div>
 
-<script>
-let role = localStorage.getItem("role")
-
-if(role !== "customer"){
-location.href = "login.html"
-}
-</script>
+<div class="bottom">
+<div class="tab" onclick="location.href='customer-home.html'">🏠<br>Home</div>
+<div class="tab active">🚗<br>Tracking</div>
+<div class="tab" onclick="location.href='customer-activity.html'">📄<br>Activity</div>
+<div class="tab" onclick="location.href='customer-account.html'">👤<br>Account</div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -319,97 +139,77 @@ location.href = "login.html"
 
 <script>
 
-// load basics
-document.getElementById("pin").innerText =
-localStorage.getItem("pin")
+// role check
+let role = localStorage.getItem("role")
+if(role !== "customer"){
+location.href = "login.html"
+}
 
-document.getElementById("issue").innerText =
-localStorage.getItem("issue")
+// load data
+document.getElementById("issue").innerText = localStorage.getItem("issue")
+let requestId = localStorage.getItem("requestId")
 
-// user location
-let myLat, myLng
+let map, userMarker, mechMarker
 
-navigator.geolocation.getCurrentPosition(pos=>{
-myLat = pos.coords.latitude
-myLng = pos.coords.longitude
+// get user location → init map
+navigator.geolocation.getCurrentPosition(pos => {
+
+let lat = pos.coords.latitude
+let lng = pos.coords.longitude
+
+map = L.map('map').setView([lat, lng], 15)
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 19
+}).addTo(map)
+
+userMarker = L.marker([lat, lng]).addTo(map)
+.bindPopup("You").openPopup()
+
 })
 
-// distance function
-function distance(lat1, lon1, lat2, lon2){
+// listen Firebase
+db.ref("requests/"+requestId).on("value",(snap)=>{
 
-var R = 6371
-var dLat = (lat2-lat1) * Math.PI/180
-var dLon = (lon2-lon1) * Math.PI/180
+let d = snap.val()
+if(!d) return
 
-var a =
-Math.sin(dLat/2) * Math.sin(dLat/2) +
-Math.cos(lat1*Math.PI/180) *
-Math.cos(lat2*Math.PI/180) *
-Math.sin(dLon/2) *
-Math.sin(dLon/2)
-
-var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-return R * c
-
-}
-
-// firebase listener
-let id = localStorage.getItem("requestId")
-
-db.ref("requests/"+id).on("value",(snap)=>{
-
-let data = snap.val()
-if(!data) return
-
-// save phone for calling
-localStorage.setItem("mechanicPhone", data.mechanicPhone)
-
-// show name
+// mechanic name
 document.getElementById("mechName").innerText =
-data.mechanicName || "Mechanic"
+d.mechanicName || "Mechanic"
 
-// accepted
-if(data.status=="accepted"){
+// update status
+if(d.status==="accepted"){
+document.getElementById("statusTitle").innerText = "On the way"
+document.getElementById("statusSub").innerText = "Mechanic heading to you"
+}
 
-document.getElementById("eta").innerText =
-"Mechanic on the way"
+if(d.status==="arrived"){
+document.getElementById("statusTitle").innerText = "Arrived"
+document.getElementById("statusSub").innerText = "Meet your mechanic"
+}
 
-document.getElementById("mapText").innerText =
-"Mechanic heading to you"
+// ✅ LIVE TRACKING (REAL)
+if(d.mechLat && d.mechLng && map){
+
+if(!mechMarker){
+mechMarker = L.marker([d.mechLat, d.mechLng]).addTo(map)
+.bindPopup("Mechanic")
+}else{
+mechMarker.setLatLng([d.mechLat, d.mechLng])
+}
 
 }
 
-// ETA calculation
-if(data.mechLat && data.mechLng && myLat && myLng){
-
-let d = distance(myLat,myLng,data.mechLat,data.mechLng)
-let eta = Math.max(1, Math.round((d/30)*60))
-
-document.getElementById("eta").innerText =
-"Arriving in "+eta+" mins"
-
-}
-
-// arrived
-if(data.status=="arrived"){
-
-document.getElementById("eta").innerText =
-"Mechanic arrived"
-
-document.getElementById("mapText").innerText =
-"Mechanic has reached your location"
-
-}
-
-// completed → show rating UI
-if(data.status=="completed"){
+// completed → rating
+if(d.status==="completed"){
 
 document.body.innerHTML = `
-<div style="padding:30px;text-align:center;">
+<div style="padding:30px;text-align:center">
 
 <h2>Rate your mechanic</h2>
 
-<div id="stars" style="font-size:35px;margin:20px 0;cursor:pointer;">
+<div id="stars" style="font-size:35px;margin:20px 0;">
 <span onclick="rate(1)">⭐</span>
 <span onclick="rate(2)">⭐</span>
 <span onclick="rate(3)">⭐</span>
@@ -417,70 +217,53 @@ document.body.innerHTML = `
 <span onclick="rate(5)">⭐</span>
 </div>
 
-<div id="selected" style="color:#aaa;margin-bottom:15px">
-Select rating
-</div>
+<div id="selected">Select rating</div>
 
-<button onclick="submitRating()">
-Submit
-</button>
+<br>
+
+<select id="solved">
+<option value="yes">Solved</option>
+<option value="no">Not solved</option>
+</select>
+
+<br><br>
+
+<input id="feedback" placeholder="Feedback">
+
+<br><br>
+
+<button onclick="submitRating()">Submit</button>
 
 </div>
 `
-
 }
 
 })
 
-// ⭐ rating logic
+// rating
 let selectedRating = 0
 
 function rate(n){
-
 selectedRating = n
-
-let stars = document.querySelectorAll("#stars span")
-
-stars.forEach((s,i)=>{
-s.style.opacity = i < n ? "1" : "0.3"
-})
-
-document.getElementById("selected").innerText =
-n + " star selected"
-
+document.getElementById("selected").innerText = n + " stars"
 }
 
+// submit
 function submitRating(){
 
-if(selectedRating==0){
-alert("Select rating first")
-return
-}
-
-let id = localStorage.getItem("requestId")
-
-db.ref("requests/"+id).update({
-rating: selectedRating
+db.ref("requests/"+requestId).update({
+rating:selectedRating
 })
 
-alert("Thanks for your feedback")
-
-location.href="customer.html"
-
+location.href="customer-home.html"
 }
 
-// 📞 real call
+// call
 function call(){
-
 let phone = localStorage.getItem("mechanicPhone")
-
-if(!phone){
-alert("Phone not available")
-return
-}
-
+if(phone){
 window.location.href = "tel:"+phone
-
+}
 }
 
 </script>
