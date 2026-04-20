@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanic Dashboard</title>
 
 <style>
 body{
@@ -10,78 +11,39 @@ background:#000;
 color:#fff;
 font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 padding-bottom:70px;
-line-height:1.5;
 }
 
 .header{
 padding:20px;
 font-size:22px;
 font-weight:600;
-letter-spacing:0.5px;
 border-bottom:1px solid #1a1a1a;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
 }
 
 .card{
-background: linear-gradient(145deg, #111, #0a0a0a);
+background:#111;
 margin:15px;
 padding:18px;
 border-radius:16px;
-
-/* subtle border */
 border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
 }
 
-/* slight lift on hover/touch */
 .card:active{
-transform: scale(0.98);
+transform:scale(0.96);
 }
 
 .btn{
-background:white;
-color:black;
+background:#fff;
+color:#000;
 padding:12px;
 border-radius:10px;
 text-align:center;
 font-weight:600;
-cursor:pointer;
-
-/* NEW */
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
-}
-
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* Spin loader */
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
+margin-top:10px;
 }
 
 .btn:active{
-transform: scale(0.95);
-opacity:0.85;
+transform:scale(0.95);
 }
 
 .bottom{
@@ -106,80 +68,6 @@ cursor:pointer;
 color:#fff;
 font-weight:600;
 }
-
-/* section titles */
-.title{
-font-size:15px;
-color:#aaa;
-margin-bottom:8px;
-}
-
-/* main text */
-.value{
-font-size:16px;
-font-weight:500;
-}
-
-/* small text */
-.sub{
-font-size:13px;
-color:#777;
-}
-
-/* spacing improvement */
-.section{
-margin-top:22px;
-}
-
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
 </head>
 
@@ -195,49 +83,120 @@ transform: scale(1.05);
 
 <script>
 
+let requests = document.getElementById("requests")
+
+// ✅ USER DATA
+let userId = localStorage.getItem("mechanicPhone")
 let mechanicName = localStorage.getItem("mechanicName")
 
+if(!userId){
+alert("Login again")
+location.href = "mechanic-login.html"
+}
+
+// ✅ SET ONLINE
+db.ref("mechanics/" + userId).update({
+online: true,
+name: mechanicName
+})
+
+let activeRequestId = null
+
+// 🚀 LOCATION TRACKING
+navigator.geolocation.watchPosition(pos => {
+
+let lat = pos.coords.latitude
+let lng = pos.coords.longitude
+
+// update mechanic location
+db.ref("mechanics/" + userId).update({
+lat: lat,
+lng: lng,
+online: true
+})
+
+// update active job
+if(activeRequestId){
+db.ref("requests/" + activeRequestId).update({
+mechLat: lat,
+mechLng: lng
+})
+}
+
+}, err=>{
+console.log("Location error", err)
+})
+
+// 🚀 SHOW ONLY ASSIGNED REQUESTS
 db.ref("requests").on("value",snap=>{
 
 requests.innerHTML=""
 
+let found = false
+
 snap.forEach(child=>{
 
-let id=child.key
-let d=child.val()
+let id = child.key
+let d = child.val()
 
-if(d.status!="pending") return
+// ONLY show requests assigned to this mechanic
+if(d.assignedMechanic === userId){
 
-requests.innerHTML+=`
+found = true
+
+requests.innerHTML += `
 <div class="card">
+
 <b>${d.vehicle}</b><br>
 Issue: ${d.problem}
-<button onclick="accept('${id}')">Accept</button>
+
+<div style="margin-top:10px;color:#aaa;">
+Status: ${d.status}
+</div>
+
+${
+d.status === "searching" ? 
+`<div class="btn" onclick="accept('${id}')">Accept</div>` 
+: ""
+}
+
 </div>
 `
-})
+}
 
 })
 
+if(!found){
+requests.innerHTML = `
+<div class="card">
+No assigned requests
+</div>
+`
+}
+
+})
+
+// 🚀 ACCEPT REQUEST
 function accept(id){
 
-localStorage.setItem("job","accepted")
+activeRequestId = id
 
-db.ref("requests/"+id).update({
+db.ref("requests/" + id).update({
 status:"accepted",
-mechanicName:mechanicName,
-mechanicPhone:localStorage.getItem("mechanicPhone")
+mechanicName: mechanicName,
+mechanicPhone: userId
 })
 
-location.href="mechanic.html"
+location.href = "mechanic.html"
 
 }
 
 </script>
+
 <div class="bottom">
-<div class="tab">Requests</div>
-<div class="tab">Activity</div>
-<div class="tab">Account</div>
+<div class="tab active">Requests</div>
+<div class="tab" onclick="location.href='mechanic-activity.html'">Activity</div>
+<div class="tab" onclick="location.href='mechanic-account.html'">Account</div>
 </div>
 
 </body>

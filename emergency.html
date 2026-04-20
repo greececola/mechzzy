@@ -2,8 +2,9 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency - MECHZZY</title>
 
-<title>Emergency</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 
@@ -11,127 +12,107 @@ body{
 margin:0;
 background:#000;
 color:#fff;
-font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+font-family:'Inter', sans-serif;
 padding-bottom:100px;
-line-height:1.5;
 }
 
+/* HEADER */
 .header{
-padding:20px;
-font-size:22px;
-font-weight:600;
-letter-spacing:0.5px;
+padding:18px;
 border-bottom:1px solid #1a1a1a;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
-
-}
-
-.section{
-padding:16px;
-margin-top:22px;
 }
 
 .title{
-font-size:15px;
-margin-bottom:8px;
-color:#aaa;
+font-size:20px;
+font-weight:600;
 }
 
+.sub{
+font-size:13px;
+color:#888;
+margin-top:4px;
+}
+
+/* SECTION */
+.section{
+padding:16px;
+}
+
+.label{
+font-size:13px;
+color:#aaa;
+margin-bottom:10px;
+}
+
+/* GRID */
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
-.card{
-background: linear-gradient(145deg, #111, #0a0a0a);
-margin:15px;
-padding:18px;
-border-radius:16px;
-
-/* subtle border */
-border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
+.option{
+background:#111;
+border:1px solid #222;
+padding:16px;
+border-radius:14px;
+text-align:center;
+font-size:15px;
 }
 
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
+.option.active{
+background:#fff;
+color:#000;
+border:1px solid #fff;
+transform:scale(1.04);
 }
 
+.option:active{
+transform:scale(0.95);
+}
+
+/* UPLOAD */
 .upload{
 background:#111;
-border:1px dashed #444;
+border:1px dashed #333;
 padding:20px;
 text-align:center;
-border-radius:12px;
+border-radius:14px;
 margin-top:10px;
-cursor:pointer;
+font-size:13px;
+color:#aaa;
 }
 
 .preview{
 width:100%;
-border-radius:10px;
+border-radius:12px;
 margin-top:10px;
 }
 
-.btn{
-background:white;
-color:black;
-padding:12px;
-border-radius:10px;
+/* BUTTON */
+.button{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#fff;
+color:#000;
+padding:18px;
 text-align:center;
-font-weight:600;
-cursor:pointer;
-
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
+font-size:18px;
+font-weight:700;
+border-top-left-radius:18px;
+border-top-right-radius:18px;
+box-shadow:0 -5px 20px rgba(0,0,0,0.6);
+z-index:1000;
 }
 
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
+.button.loading{
+background:#555;
+color:#ccc;
 }
 
-/* Spin loader */
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
-}
-
-.btn:active{
-transform: scale(0.95);
-opacity:0.85;
-}
-
-/* main text */
-.value{
-font-size:16px;
-font-weight:500;
-}
-
-/* small text */
-.sub{
-font-size:13px;
-color:#777;
-}
-
+/* NAV */
 .bottom{
 position:fixed;
 bottom:0;
@@ -146,7 +127,7 @@ flex:1;
 text-align:center;
 padding:12px;
 color:#777;
-font-size:13px;
+font-size:12px;
 cursor:pointer;
 }
 
@@ -155,178 +136,117 @@ color:#fff;
 font-weight:600;
 }
 
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
 </head>
 
 <body>
 
 <div class="header">
-<div style="font-size:22px;font-weight:600">Emergency</div>
-<div style="color:#aaa;font-size:13px;margin-top:4px">
-Find nearby mechanic instantly
-</div>
+<div class="title">Emergency Help</div>
+<div class="sub">Get a mechanic instantly</div>
 </div>
 
 <div class="section">
-<div class="title">Select Vehicle</div>
+<div class="label">Select Vehicle</div>
 
 <div class="grid">
-<div class="card" onclick="selectVehicle(this,'Car')">🚗 Car</div>
-<div class="card" onclick="selectVehicle(this,'Bike')">🏍 Bike</div>
-<div class="card" onclick="selectVehicle(this,'Scooty')">🛵 Scooty</div>
-<div class="card" onclick="selectVehicle(this,'Other')">🚙 Other</div>
+<div class="option" onclick="selectVehicle(this,'Car')">🚗 Car</div>
+<div class="option" onclick="selectVehicle(this,'Bike')">🏍️ Bike</div>
+<div class="option" onclick="selectVehicle(this,'Scooty')">🛵 Scooty</div>
+<div class="option" onclick="selectVehicle(this,'Other')">⚙️ Other</div>
 </div>
 </div>
 
 <div class="section">
-<div class="title">What's the issue?</div>
+<div class="label">What’s the issue?</div>
 
 <div class="grid">
-<div class="card" onclick="selectProblem(this,'Battery')">🔋 Battery</div>
-<div class="card" onclick="selectProblem(this,'Puncture')">🛞 Puncture</div>
-<div class="card" onclick="selectProblem(this,'Fuel')">⛽ Fuel</div>
-<div class="card" onclick="selectProblem(this,'Not Starting')">⚙️ Not Starting</div>
-<div class="card" onclick="selectProblem(this,'Overheat')">🔥 Overheat</div>
-<div class="card" onclick="selectProblem(this,'Accident')">💥 Accident</div>
+<div class="option" onclick="selectProblem(this,'Battery')">🔋 Battery</div>
+<div class="option" onclick="selectProblem(this,'Puncture')">🛞 Puncture</div>
+<div class="option" onclick="selectProblem(this,'Fuel')">⛽ Fuel</div>
+<div class="option" onclick="selectProblem(this,'Not Starting')">⚙️ Not Starting</div>
+<div class="option" onclick="selectProblem(this,'Overheat')">🔥 Overheat</div>
+<div class="option" onclick="selectProblem(this,'Accident')">💥 Accident</div>
 </div>
 </div>
 
 <div class="section">
-<div class="title">Upload Vehicle Photo (optional)</div>
+<div class="label">Add Photo (optional)</div>
 
-<div class="upload" onclick="pickImage()">
-📷 Tap to add photo
-</div>
+<div class="upload" onclick="pickImage()">📷 Tap to upload</div>
 
-<img id="preview" class="preview" style="display:none"/>
 <input type="file" id="file" accept="image/*" style="display:none">
+<img id="preview" class="preview" style="display:none">
 </div>
 
-<div class="button" onclick="requestMechanic()">
-Request Mechanic
+<div class="button" id="btn" onclick="requestMechanic()">
+🚀 Get Mechanic Now
 </div>
 
-<!-- ✅ ROLE PROTECTION -->
-<script>
-let role = localStorage.getItem("role")
+<div class="bottom">
+<div class="tab" onclick="location.href='customer-home.html'">🏠<br>Home</div>
+<div class="tab" onclick="location.href='customer-activity.html'">📄<br>Activity</div>
+<div class="tab active">🚨<br>Emergency</div>
+<div class="tab" onclick="location.href='customer-account.html'">👤<br>Account</div>
+</div>
 
-if(role !== "customer"){
-location.href = "login.html"
-}
-</script>
-
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
 
 <script>
-
-var firebaseConfig = {
-apiKey: "AIzaSyBRb3bcxCdIlOUA74TNw1hdrxfzGv-67DU",
-authDomain: "mechzzy.firebaseapp.com",
-databaseURL: "https://mechzzy-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId: "mechzzy"
-};
-
-firebase.initializeApp(firebaseConfig);
-var db = firebase.database();
 
 let vehicle = ""
 let problem = ""
 let photo = ""
+let lat = null
+let lng = null
 
 function selectVehicle(el,val){
-
-document.querySelectorAll(".grid")[0]
-.querySelectorAll(".card")
-.forEach(c=>c.classList.remove("active"))
+document.querySelectorAll(".section")[0]
+.querySelectorAll(".option")
+.forEach(o=>o.classList.remove("active"))
 
 el.classList.add("active")
 vehicle = val
+
+updateButton()
 }
 
 function selectProblem(el,val){
-
-document.querySelectorAll(".grid")[1]
-.querySelectorAll(".card")
-.forEach(c=>c.classList.remove("active"))
+document.querySelectorAll(".section")[1]
+.querySelectorAll(".option")
+.forEach(o=>o.classList.remove("active"))
 
 el.classList.add("active")
 problem = val
+
+updateButton()
 }
 
 function pickImage(){
 document.getElementById("file").click()
 }
 
-document.getElementById("file").addEventListener("change",function(e){
-
+file.onchange = function(e){
 let reader = new FileReader()
-
-reader.onload=function(){
+reader.onload = function(){
 photo = reader.result
 preview.src = photo
 preview.style.display="block"
 }
-
 reader.readAsDataURL(e.target.files[0])
+}
 
-})
-
+// 📍 location
 navigator.geolocation.getCurrentPosition(pos=>{
-window.lat = pos.coords.latitude
-window.lng = pos.coords.longitude
+lat = pos.coords.latitude
+lng = pos.coords.longitude
+}, ()=>{
+alert("Location permission needed")
 })
 
+// 🚀 request
 function requestMechanic(){
 
 if(!vehicle){
@@ -339,37 +259,53 @@ alert("Select problem")
 return
 }
 
+if(!lat || !lng){
+alert("Getting location... try again")
+return
+}
+
+// loading UI
+btn.innerText = "Finding mechanic..."
+btn.classList.add("loading")
+
 let id = Date.now()
 let pin = Math.floor(1000 + Math.random()*9000)
 
-// save request
 db.ref("requests/"+id).set({
 vehicle:vehicle,
 problem:problem,
-photo:photo || "",
-lat:window.lat,
-lng:window.lng,
-status:"pending",
+photo:photo,
+lat:lat,
+lng:lng,
+status:"searching",
 pin:pin,
 created:Date.now()
 })
 
-// save history
-let history =
-JSON.parse(localStorage.getItem("history") || "[]")
-
+// history
+let history = JSON.parse(localStorage.getItem("history") || "[]")
 history.push(id)
-
 localStorage.setItem("history", JSON.stringify(history))
 
-// save locally
 localStorage.setItem("requestId", id)
 localStorage.setItem("pin", pin)
 localStorage.setItem("vehicle", vehicle)
 localStorage.setItem("issue", problem)
 
-// go next
-window.location.href = "searching.html"
+location.href = "searching.html"
+}
+
+function updateButton(){
+
+if(vehicle && problem){
+btn.innerText = "🚀 Request Mechanic Now"
+}
+else if(vehicle){
+btn.innerText = "Select issue"
+}
+else{
+btn.innerText = "Select vehicle"
+}
 
 }
 

@@ -259,5 +259,42 @@ location.href = "login.html"
 
 </script>
 
+<div class="bottom-nav">
+  <div onclick="go('customer-home.html')" class="nav-item">🏠<br>Home</div>
+  <div onclick="go('customer-activity.html')" class="nav-item">📄<br>Activity</div>
+  <div onclick="go('services.html')" class="nav-item">🛠️<br>Services</div>
+  <div onclick="go('customer-account.html')" class="nav-item">👤<br>Account</div>
+</div>
+
+<style>
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+background:#000;
+border-top:1px solid #222;
+}
+
+.nav-item{
+flex:1;
+text-align:center;
+padding:10px;
+font-size:12px;
+color:#aaa;
+}
+
+.nav-item:active{
+color:#fff;
+transform:scale(0.95);
+}
+</style>
+
+<script>
+function go(page){
+window.location.href = page
+}
+</script>
+
 </body>
 </html>

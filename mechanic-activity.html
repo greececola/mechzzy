@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanic Activity</title>
 
 <style>
 body{
@@ -10,94 +11,46 @@ background:#000;
 color:#fff;
 font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 padding-bottom:70px;
-line-height:1.5;
-}
-
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
-}
-
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* Spin loader */
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
 }
 
 .header{
 padding:20px;
 font-size:22px;
 font-weight:600;
-letter-spacing:0.5px;
 border-bottom:1px solid #1a1a1a;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
 }
 
-/* cards */
 .card{
-background: linear-gradient(145deg, #111, #0a0a0a);
+background:#111;
 margin:15px;
 padding:18px;
 border-radius:16px;
-
-/* subtle border */
 border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
-
-}
-
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
-}
-
-.title{
-font-size:15px;
-font-weight:600;
-color:#aaa;
-margin-bottom:8px;
-}
-
-.sub{
-font-size:13px;
-color:#777;
-margin-top:4px;
 }
 
 .status{
-margin-top:10px;
+margin-top:6px;
+color:#4caf50;
 font-size:13px;
-color:#0f5132;
 }
 
-/* main text */
-.value{
-font-size:16px;
-font-weight:500;
+.rating{
+margin-top:10px;
+font-size:14px;
+color:#ccc;
+line-height:1.5;
 }
 
-/* spacing improvement */
-.section{
-margin-top:22px;
+.empty{
+text-align:center;
+margin-top:40px;
+color:#777;
+}
+
+.loading{
+text-align:center;
+margin-top:40px;
+color:#555;
 }
 
 .bottom{
@@ -114,72 +67,21 @@ flex:1;
 text-align:center;
 padding:12px;
 color:#777;
-font-size:13px;
-cursor:pointer;
+font-size:12px;
 }
 
 .tab.active{
 color:#fff;
 font-weight:600;
 }
-
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="header">Activity</div>
+<div class="header">My Activity</div>
 
-<div id="list"></div>
+<div id="activityList"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -187,46 +89,76 @@ transform: scale(1.05);
 
 <script>
 
+// 🔐 ROLE CHECK
 let role = localStorage.getItem("role")
-if(role!=="mechanic") location.href="login.html"
+if(role !== "mechanic"){
+location.href = "mechanic-login.html"
+}
 
-let list=document.getElementById("list")
+// ✅ USE UNIQUE ID (PHONE)
+let mechanicPhone = localStorage.getItem("mechanicPhone")
 
-let mechanicName = localStorage.getItem("mechanicName")
+if(!mechanicPhone){
+alert("Login again")
+location.href = "mechanic-login.html"
+}
 
-db.ref("requests").on("value",snap=>{
+let container = document.getElementById("activityList")
 
-list.innerHTML=""
+// loading state
+container.innerHTML = `<div class="loading">Loading...</div>`
 
-snap.forEach(child=>{
+// 🔥 LISTEN
+db.ref("requests").on("value", (snapshot)=>{
 
-let d=child.val()
+let data = snapshot.val()
 
-if(d.status!="completed") return
-if(d.mechanicName!=mechanicName) return
+container.innerHTML = ""
 
-list.innerHTML+=`
+if(!data){
+container.innerHTML = `<div class="empty">No data available</div>`
+return
+}
+
+let found = false
+
+for(let id in data){
+
+let req = data[id]
+
+// ✅ FILTER THIS MECHANIC ONLY
+if(req.mechanicPhone !== mechanicPhone) continue
+
+// ✅ ONLY COMPLETED
+if(req.status !== "completed") continue
+
+found = true
+
+container.innerHTML += `
 <div class="card">
-<b>${d.vehicle}</b><br>
-Issue: ${d.problem}
-<div class="status">Completed</div>
+
+<b>${req.vehicle || req.vehicleType || "Vehicle"}</b><br>
+Issue: ${req.problem || req.problemType || "-"}
+
+<div class="status">Completed ✅</div>
+
+<div class="rating">
+⭐ Rating: ${req.rating || "Not rated"} <br>
+👍 Solved: ${
+req.solved === true ? "Yes" :
+req.solved === false ? "No" : "N/A"
+} <br>
+💬 ${req.feedback || ""}
+</div>
+
 </div>
 `
+}
 
-})
-
-if(list.innerHTML==""){
-list.innerHTML=`
-<div class="card fade" style="text-align:center">
-
-<div style="font-size:16px;margin-bottom:6px">
-No completed jobs
-</div>
-
-<div style="color:#777;font-size:13px">
-Your completed services will appear here
-</div>
-
+if(!found){
+container.innerHTML = `
+<div class="empty">
+No completed jobs yet
 </div>
 `
 }
@@ -234,5 +166,12 @@ Your completed services will appear here
 })
 
 </script>
+
+<div class="bottom">
+<div class="tab" onclick="location.href='mechanic-home.html'">🏠<br>Home</div>
+<div class="tab active">📄<br>Activity</div>
+<div class="tab" onclick="location.href='mechanic-account.html'">👤<br>Account</div>
+</div>
+
 </body>
 </html>

@@ -3,6 +3,8 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Activity</title>
+
 <style>
 body{
 margin:0;
@@ -10,167 +12,62 @@ background:#000;
 color:#fff;
 font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 padding-bottom:70px;
-line-height:1.5;
 }
 
 .header{
 padding:20px;
 font-size:22px;
 font-weight:600;
-letter-spacing:0.5px;
 border-bottom:1px solid #1a1a1a;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
 }
 
 .card{
-background: linear-gradient(145deg, #111, #0a0a0a);
+background:#111;
 margin:15px;
 padding:18px;
 border-radius:16px;
-
-/* subtle border */
 border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
-
-}
-
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
-}
-
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* Spin loader */
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
-
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
 }
 
 .status{
-margin-top:6px;
-color:#aaa;
+margin-top:8px;
 font-size:13px;
-}
-
-/* section titles */
-.title{
-font-size:15px;
 color:#aaa;
-margin-bottom:8px;
 }
 
-/* main text */
-.value{
-font-size:16px;
-font-weight:500;
-}
-
-/* small text */
-.sub{
+.rating{
+margin-top:8px;
 font-size:13px;
+color:#ccc;
+}
+
+.empty{
+text-align:center;
+margin-top:40px;
 color:#777;
 }
 
-/* spacing improvement */
-.section{
-margin-top:22px;
-}
-
-.bottom{
+.bottom-nav{
 position:fixed;
 bottom:0;
 width:100%;
 display:flex;
 background:#000;
-border-top:1px solid #1a1a1a;
+border-top:1px solid #222;
 }
 
-.tab{
+.nav-item{
 flex:1;
 text-align:center;
-padding:12px;
-color:#777;
-font-size:13px;
-cursor:pointer;
+padding:10px;
+font-size:12px;
+color:#aaa;
 }
 
-.tab.active{
+.nav-item.active{
 color:#fff;
 font-weight:600;
 }
-
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
 </head>
 
@@ -180,42 +77,43 @@ transform: scale(1.05);
 
 <div id="list"></div>
 
-<script>
-let role = localStorage.getItem("role")
-
-if(role !== "customer"){
-location.href = "login.html"
-}
-</script>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="firebase.js"></script>
 
 <script>
 
-let history = JSON.parse(
-localStorage.getItem("history") || "[]"
-)
-
-if(history.length==0){
-list.innerHTML=`
-<div class="card fade" style="text-align:center">
-
-<div style="font-size:16px;margin-bottom:6px">
-No requests yet
-</div>
-
-<div style="color:#777;font-size:13px">
-Your past services will appear here
-</div>
-
-</div>
-`
-return
+// role check
+let role = localStorage.getItem("role")
+if(role !== "customer"){
+location.href = "login.html"
 }
 
-history.reverse().forEach(id=>{
+// get container
+let list = document.getElementById("list")
+
+// loading state
+list.innerHTML = `<div class="empty">Loading...</div>`
+
+// history
+let history = JSON.parse(localStorage.getItem("history") || "[]")
+
+// empty case
+if(history.length === 0){
+list.innerHTML = `
+<div class="empty">
+No requests yet<br><br>
+<span style="font-size:13px;color:#555;">
+Your past services will appear here
+</span>
+</div>
+`
+}else{
+
+list.innerHTML = ""
+
+// latest first
+history.slice().reverse().forEach(id=>{
 
 db.ref("requests/"+id).once("value",snap=>{
 
@@ -225,12 +123,16 @@ if(!d) return
 list.innerHTML += `
 <div class="card">
 
-<b>${d.vehicle}</b><br>
-Issue: ${d.problem}
+<b>${d.vehicle || "-"}</b><br>
+Issue: ${d.problem || "-"}
 
 <div class="status">
-Status: ${d.status}
+Status: ${formatStatus(d.status)}
 </div>
+
+${
+d.rating ? `<div class="rating">⭐ ${d.rating} rating</div>` : ""
+}
 
 </div>
 `
@@ -239,7 +141,34 @@ Status: ${d.status}
 
 })
 
+}
+
+// format status
+function formatStatus(s){
+
+if(s==="completed") return "Completed ✅"
+if(s==="accepted") return "On the way 🚗"
+if(s==="arrived") return "Arrived 📍"
+if(s==="pending") return "Searching ⏳"
+if(s==="cancelled") return "Cancelled ❌"
+
+return s
+
+}
+
+// navigation
+function go(page){
+location.href = page
+}
+
 </script>
+
+<div class="bottom-nav">
+<div class="nav-item" onclick="go('customer-home.html')">🏠<br>Home</div>
+<div class="nav-item active">📄<br>Activity</div>
+<div class="nav-item" onclick="go('services.html')">🛠️<br>Services</div>
+<div class="nav-item" onclick="go('customer-account.html')">👤<br>Account</div>
+</div>
 
 </body>
 </html>

@@ -2,107 +2,102 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Finding Mechanic</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body{
-background:black;
-color:white;
-font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 margin:0;
-padding:0;
-line-height:1.5;
+background:#000;
+color:#fff;
+font-family:'Inter', sans-serif;
 }
 
-.container{
-padding:20px;
+.header{
+padding:18px;
+border-bottom:1px solid #1a1a1a;
+font-size:18px;
+font-weight:600;
+}
+
+.center{
+text-align:center;
+padding:30px 20px;
 }
 
 .title{
-font-size:15px;
+font-size:20px;
 font-weight:600;
-margin-top:22px;
-margin-bottom:8px;
-color:#aaa;
 }
 
 .sub{
-color:#777;
-margin-top:5px;
 font-size:13px;
+color:#888;
+margin-top:6px;
 }
 
 .loader{
-width:60px;
-height:60px;
-border:4px solid #222;
-border-top:4px solid white;
+width:80px;
+height:80px;
+border:5px solid #222;
+border-top:5px solid #fff;
 border-radius:50%;
 animation:spin 1s linear infinite;
-margin:40px auto;
+margin:30px auto;
 }
 
-.card{
-background: linear-gradient(145deg, #111, #0a0a0a);
-margin:15px;
-padding:18px;
-border-radius:16px;
-
-/* subtle border */
-border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
-
-}
-
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
-}
-
-/* animation */
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
-}
-
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* Spin loader */
 @keyframes spin{
 0%{transform:rotate(0)}
 100%{transform:rotate(360deg)}
 }
 
+.status{
+font-size:14px;
+color:#aaa;
+margin-top:10px;
+}
 
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
+.card{
+background:#111;
+margin:15px;
+padding:16px;
+border-radius:14px;
+border:1px solid #222;
 }
 
 .label{
-color:gray;
-font-size:13px;
+color:#777;
+font-size:12px;
 }
 
 .value{
+font-size:15px;
 margin-top:4px;
-font-size:16px;
-font-weight:500;
+}
+
+.pin-box{
+background:#111;
+margin:15px;
+padding:16px;
+border-radius:14px;
+text-align:center;
+border:1px solid #222;
+}
+
+.pin{
+font-size:28px;
+letter-spacing:8px;
+margin-top:10px;
+}
+
+.cancel{
+margin:20px;
+padding:14px;
+text-align:center;
+border-radius:12px;
+background:#222;
+color:#fff;
 }
 
 .bottom{
@@ -119,107 +114,38 @@ flex:1;
 text-align:center;
 padding:12px;
 color:#777;
-font-size:13px;
-cursor:pointer;
+font-size:12px;
 }
 
 .tab.active{
 color:#fff;
-font-weight:600;
 }
-
-.pin{
-font-size:28px;
-letter-spacing:8px;
-margin-top:10px;
-}
-
-.header{
-padding:20px;
-font-size:22px;
-font-weight:600;
-letter-spacing:0.5px;
-border-bottom:1px solid #1a1a1a;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
-}
-
-/* spacing improvement */
-.section{
-margin-top:22px;
-}
-
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="header">Finding Mechanic</div>
 
-<div class="title">Finding nearby mechanic</div>
+<div class="center">
+<div class="title">Searching nearby mechanics</div>
 <div class="sub">Please wait while we connect you</div>
 
 <div class="loader"></div>
 
+<div class="status" id="statusText">
+Looking for available mechanics...
+</div>
+</div>
+
 <div class="card">
 <div class="label">Vehicle</div>
-<div class="value" id="vehicle">Car</div>
+<div class="value" id="vehicle"></div>
 </div>
 
 <div class="card">
 <div class="label">Issue</div>
-<div class="value" id="issue">Battery</div>
+<div class="value" id="issue"></div>
 </div>
 
 <div class="card">
@@ -227,32 +153,19 @@ transform: scale(1.05);
 <div class="value" id="location">Fetching location...</div>
 </div>
 
-</div>
-
-<div class="card" style="text-align:center;margin:15px">
-Share PIN with mechanic
+<div class="pin-box">
+Share this PIN with mechanic
 <div class="pin" id="pin">----</div>
 </div>
 
-<div style="margin-top:15px;text-align:center">
-<button onclick="cancel()" style="
-padding:12px;
-background:#222;
-color:white;
-border:none;
-border-radius:8px;
-">
-Cancel Request
-</button>
+<div class="cancel" onclick="cancel()">Cancel Request</div>
+
+<div class="bottom">
+<div class="tab" onclick="location.href='customer-home.html'">🏠<br>Home</div>
+<div class="tab active">🔍<br>Searching</div>
+<div class="tab" onclick="location.href='customer-activity.html'">📄<br>Activity</div>
+<div class="tab" onclick="location.href='customer-account.html'">👤<br>Account</div>
 </div>
-
-<script>
-let role = localStorage.getItem("role")
-
-if(role !== "customer"){
-location.href = "login.html"
-}
-</script>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -260,63 +173,91 @@ location.href = "login.html"
 
 <script>
 
-// get from previous page
-document.getElementById("vehicle").innerText =
-localStorage.getItem("vehicle")
+// 🔐 ROLE CHECK
+let role = localStorage.getItem("role")
+if(role !== "customer"){
+location.href = "login.html"
+}
 
-document.getElementById("issue").innerText =
-localStorage.getItem("issue")
+// 🔐 REQUEST ID CHECK
+let id = localStorage.getItem("requestId")
+if(!id){
+alert("Session expired")
+location.href = "customer-home.html"
+}
 
-// show pin
-const pin = localStorage.getItem("pin")
-document.getElementById("pin").innerText = pin
+// show details
+document.getElementById("vehicle").innerText = localStorage.getItem("vehicle") || "-"
+document.getElementById("issue").innerText = localStorage.getItem("issue") || "-"
+document.getElementById("pin").innerText = localStorage.getItem("pin") || "----"
 
-// location
-navigator.geolocation.getCurrentPosition(function(pos){
+// 📍 LOCATION
+navigator.geolocation.getCurrentPosition(pos=>{
+let lat = pos.coords.latitude.toFixed(4)
+let lng = pos.coords.longitude.toFixed(4)
 
-let lat = pos.coords.latitude
-let lng = pos.coords.longitude
-
-document.getElementById("location").innerText =
-lat.toFixed(4) + ", " + lng.toFixed(4)
-
+document.getElementById("location").innerText = lat + ", " + lng
+}, ()=>{
+document.getElementById("location").innerText = "Location unavailable"
 })
 
-// listen mechanic accept
-let id = localStorage.getItem("requestId")
+// 🔄 STATUS ANIMATION
+let messages = [
+"Looking for nearby mechanics...",
+"Checking availability...",
+"Connecting to mechanic...",
+"Almost there..."
+]
 
+let i = 0
+let statusInterval = setInterval(()=>{
+document.getElementById("statusText").innerText = messages[i]
+i = (i+1) % messages.length
+},2000)
+
+// ⏳ TIMEOUT (fallback)
+setTimeout(()=>{
+document.getElementById("statusText").innerText =
+"Still searching... please wait or try again"
+},15000)
+
+// 🔥 FIREBASE LISTENER
 db.ref("requests/"+id).on("value",(snap)=>{
 
 let r = snap.val()
 if(!r) return
 
-// 🔴 STILL SEARCHING
-if(r.status == "pending"){
-// nothing
-}
-
-// 🟢 ACCEPTED
+// accepted
 if(r.status == "accepted"){
+
+clearInterval(statusInterval)
+
+document.getElementById("statusText").innerText =
+"Mechanic found!"
 
 localStorage.setItem("mechanicName", r.mechanicName)
 localStorage.setItem("mechanicPhone", r.mechanicPhone)
 
+setTimeout(()=>{
 location.href = "assigned.html"
+},800)
 
 }
 
+// no mechanic
+if(r.status == "cancelled"){
+alert("Request cancelled")
+location.href = "customer-home.html"
+}
+
 })
-// cancel request
+
+// ❌ CANCEL
 function cancel(){
-
-let id = localStorage.getItem("requestId")
-
 db.ref("requests/"+id).update({
 status:"cancelled"
 })
-
-location.href="customer.html"
-
+location.href="customer-home.html"
 }
 
 </script>

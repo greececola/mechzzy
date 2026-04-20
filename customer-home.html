@@ -2,72 +2,115 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MECHZZY</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 body{
 margin:0;
+font-family:'Inter', sans-serif;
 background:#000;
 color:#fff;
-font-family:-apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-padding-bottom:70px;
-line-height:1.5;
+padding-bottom:80px;
 }
 
+/* HEADER */
 .header{
-padding:20px;
-font-size:22px;
-font-weight:600;
-letter-spacing:0.5px;
+padding:18px;
 border-bottom:1px solid #1a1a1a;
-background:#000;
-position:sticky;
-top:0;
-z-index:10;
+}
+
+.logo{
+font-size:22px;
+font-weight:700;
+}
+
+.tagline{
+font-size:13px;
+color:#888;
+}
+
+/* LOCATION */
+.location{
+padding:15px 18px;
+font-size:14px;
+color:#aaa;
+}
+
+/* HERO */
+.hero{
+margin:15px;
+padding:20px;
+background:#111;
+border-radius:18px;
+border:1px solid #222;
+}
+
+.hero-title{
+font-size:18px;
+font-weight:600;
+}
+
+.hero-sub{
+font-size:13px;
+color:#888;
+margin-top:5px;
+}
+
+/* BUTTON */
+.btn{
+margin-top:15px;
+padding:14px;
+background:#fff;
+color:#000;
+border-radius:12px;
+text-align:center;
+font-weight:600;
+}
+
+.btn:active{
+transform:scale(0.96);
+}
+
+/* GRID */
+.section{
+padding:0 15px;
+margin-top:20px;
+}
+
+.section-title{
+font-size:14px;
+color:#aaa;
+margin-bottom:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
 
 .card{
-background: linear-gradient(145deg, #111, #0a0a0a);
+background:#111;
+padding:16px;
+border-radius:14px;
+border:1px solid #222;
+text-align:center;
+}
+
+/* TRUST */
+.trust{
 margin:15px;
-padding:18px;
-border-radius:16px;
-
-/* subtle border */
-border:1px solid #1f1f1f;
-
-/* premium depth */
-box-shadow: 
-0 4px 20px rgba(0,0,0,0.6),
-inset 0 0 0 1px rgba(255,255,255,0.02);
-
-/* Smooth feel */
-*{
-transition: all 0.25s ease;
+padding:16px;
+border-radius:14px;
+background:#111;
+border:1px solid #222;
+font-size:13px;
+color:#aaa;
 }
 
-/* Fade animation */
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* Spin loader */
-@keyframes spin{
-0%{transform:rotate(0)}
-100%{transform:rotate(360deg)}
-}
-}
-
-/* slight lift on hover/touch */
-.card:active{
-transform: scale(0.98);
-}
-
+/* NAV */
 .bottom{
 position:fixed;
 bottom:0;
@@ -82,164 +125,91 @@ flex:1;
 text-align:center;
 padding:12px;
 color:#777;
-font-size:13px;
-cursor:pointer;
+font-size:12px;
 }
 
 .tab.active{
 color:#fff;
-font-weight:600;
 }
-
-/* section titles */
-.title{
-font-size:15px;
-color:#aaa;
-margin-bottom:8px;
-}
-
-/* main text */
-.value{
-font-size:16px;
-font-weight:500;
-}
-
-/* small text */
-.sub{
-font-size:13px;
-color:#777;
-}
-
-/* spacing improvement */
-.section{
-margin-top:22px;
-}
-
-/* 🔥 UNIVERSAL CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* TAP EFFECT */
-button:active, 
-.card:active, 
-.option:active, 
-.tab:active, 
-.btn:active {
-transform: scale(0.96);
-opacity: 0.85;
-}
-
-/* HOVER (for laptop) */
-button:hover, 
-.card:hover, 
-.option:hover {
-background:#1a1a1a;
-}
-
-/* 🔥 STRONG CLICK FEEDBACK */
-
-button, .card, .option, .tab, .btn {
-transition: all 0.15s ease;
-cursor: pointer;
-}
-
-/* 🔥 STRONG PRESS EFFECT */
-button:active,
-.card:active,
-.option:active,
-.tab:active,
-.btn:active {
-transform: scale(0.94);
-background:#2a2a2a !important;
-border:1px solid #fff !important;
-}
-
-/* 🔥 SELECTED STATE (IMPORTANT) */
-.active {
-background:#2a2a2a !important;
-border:2px solid #fff !important;
-transform: scale(1.05);
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="header" style="text-align:center; padding:15px 10px;">
-  <div style="font-size:24px; font-weight:700; letter-spacing:1px;">MECHZZY</div>
-  <div style="font-size:13px; color:#888; margin-top:2px;">
-    Mechanic in Minutes
-  </div>
+<div class="header">
+<div class="logo">MECHZZY</div>
+<div class="tagline">Mechanic in Minutes</div>
 </div>
 
-<div class="card">
-Select Vehicle<br><br>
-
-<button onclick="selectVehicle('Car')">Car</button>
-<button onclick="selectVehicle('Bike')">Bike</button>
-<button onclick="selectVehicle('Scooty')">Scooty</button>
-<button onclick="selectVehicle('Other')">Other</button>
+<div class="location" id="locationText">
+📍 Detecting location...
 </div>
 
-<div class="card">
-Select Problem<br><br>
+<div class="hero">
+<div class="hero-title">Get Help in Minutes</div>
+<div class="hero-sub">Instant mechanic at your location</div>
 
-<button onclick="selectProblem('Fuel')">Fuel</button>
-<button onclick="selectProblem('Puncture')">Puncture</button>
-<button onclick="selectProblem('Battery')">Battery</button>
-<button onclick="selectProblem('Accident')">Accident</button>
-<button onclick="selectProblem('Other')">Other</button>
+<div class="btn" onclick="goEmergency()">
+🚨 Get Mechanic Now
+</div>
 </div>
 
-<button onclick="request()">FIND MECHANIC NOW</button>
+<div class="section">
+<div class="section-title">Quick Select</div>
 
+<div class="grid">
+<div class="card">🚗 Car</div>
+<div class="card">🏍️ Bike</div>
+<div class="card">🛵 Scooty</div>
+<div class="card">⚙️ Other</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Schedule Service</div>
+
+<div class="grid">
+<div class="card">🧽 Washing</div>
+<div class="card">🔋 Battery</div>
+<div class="card">🛠️ Repair</div>
+<div class="card">🛢️ Oil Change</div>
+</div>
+</div>
+
+<div class="trust">
+✔ Verified Mechanics<br>
+✔ Fast Response<br>
+✔ Trusted Service
+</div>
+
+<div class="bottom">
+<div class="tab active">🏠<br>Home</div>
+<div class="tab" onclick="location.href='customer-activity.html'">📄<br>Activity</div>
+<div class="tab" onclick="location.href='services.html'">🛠️<br>Services</div>
+<div class="tab" onclick="location.href='customer-account.html'">👤<br>Account</div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="firebase.js"></script>
 
 <script>
 
-let vehicle=""
-let problem=""
+// detect location only (UI purpose)
+navigator.geolocation.getCurrentPosition(pos => {
 
-function selectVehicle(v){ vehicle=v }
-function selectProblem(p){ problem=p }
+let lat = pos.coords.latitude.toFixed(4)
+let lng = pos.coords.longitude.toFixed(4)
 
-navigator.geolocation.getCurrentPosition(pos=>{
-window.lat = pos.coords.latitude
-window.lng = pos.coords.longitude
+document.getElementById("locationText").innerText =
+"📍 " + lat + ", " + lng
+
 })
 
-function request(){
-
-if(!vehicle || !problem){
-alert("Select all")
-return
-}
-
-let id = Date.now()
-let pin = Math.floor(1000 + Math.random()*9000)
-
-db.ref("requests/"+id).set({
-vehicle:vehicle,
-problem:problem,
-lat:window.lat,
-lng:window.lng,
-status:"pending",
-pin:pin,
-mechanicName:"",
-mechanicPhone:""
-})
-
-localStorage.setItem("requestId",id)
-localStorage.setItem("pin",pin)
-localStorage.setItem("vehicle",vehicle)
-localStorage.setItem("issue",problem)
-
-location.href="searching.html"
-
+// go to emergency page
+function goEmergency(){
+location.href = "emergency.html"
 }
 
 </script>
