@@ -139,8 +139,8 @@ snap.forEach(child=>{
 let id = child.key
 let d = child.val()
 
-// ONLY show requests assigned to this mechanic
-if(d.assignedMechanic === userId){
+// ✅ show new requests OR already assigned ones
+if(d.status === "searching" || d.assignedMechanic === userId){
 
 found = true
 
