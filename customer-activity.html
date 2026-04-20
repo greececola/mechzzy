@@ -146,6 +146,31 @@ button:hover,
 background:#1a1a1a;
 }
 
+/* 🔥 STRONG CLICK FEEDBACK */
+
+button, .card, .option, .tab, .btn {
+transition: all 0.15s ease;
+cursor: pointer;
+}
+
+/* 🔥 STRONG PRESS EFFECT */
+button:active,
+.card:active,
+.option:active,
+.tab:active,
+.btn:active {
+transform: scale(0.94);
+background:#2a2a2a !important;
+border:1px solid #fff !important;
+}
+
+/* 🔥 SELECTED STATE (IMPORTANT) */
+.active {
+background:#2a2a2a !important;
+border:2px solid #fff !important;
+transform: scale(1.05);
+}
+
 </style>
 </head>
 
